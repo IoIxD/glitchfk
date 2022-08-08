@@ -10,6 +10,8 @@ import (
 	"math/rand"
 	"net/http"
 	"os"
+	"os/signal"
+	"syscall"
 	"time"
 
 	"github.com/dghubble/oauth1"
@@ -54,30 +56,51 @@ func main() {
 		return
 	}
 
-	InitTwitter(LocalConfig.OAuthToken,LocalConfig.OAuthSecret)
-	image := NewImage()
+	duration, err := time.ParseDuration(LocalConfig.Interval)
+	if(err != nil) {
+		fmt.Println(err)
+		return
+	}
 
-	// if we're in production, tweet out the result 
 	if(LocalConfig.InProduction) {
-		image, resp, err := client.Media.Upload(image,"image/png")
-		if(err != nil) {
-			fmt.Println(err)
-			return
+		InitTwitter(LocalConfig.OAuthToken,LocalConfig.OAuthSecret)
+		sigs := make(chan os.Signal, 1)
+		signal.Notify(sigs, os.Interrupt, syscall.SIGTERM)
+		for {
+			select {
+				case <-sigs:
+					os.Exit(0)
+				case <-WaitFor(duration):
+					image := NewImage()
+					result, resp, err := client.Media.Upload(image,"image/png")
+					if(err != nil) {
+						fmt.Println(err)
+						return
+					}
+					if(resp.StatusCode != 201) {
+						fmt.Printf("%v.\n No other response given; the full struct is %v\n",resp.Status,resp)
+						return
+					}
+					client.Statuses.Update("",&twitter.StatusUpdateParams{
+						MediaIds: []int64{result.MediaID},
+					})
+			}
 		}
-		if(resp.StatusCode != 201) {
-			fmt.Printf("%v.\n No other response given; the full struct is %v\n",resp.Status,resp)
-			return
-		}
-		client.Statuses.Update("",&twitter.StatusUpdateParams{
-			MediaIds: []int64{image.MediaID},
-		})
 	} else {
+		image := NewImage()
 		f, _ := os.Create("test.png")
 		f.Write(image)
 		f.Close()
 	}
 
 }
+
+func WaitFor(int time.Duration) <-chan time.Time {
+	now := time.Now()
+	dur := now.Truncate(int).Add(int).Sub(now)
+	return time.After(dur)
+}
+
 
 func InitTwitter(token, secret string) {
 	OAuth1Config = oauth1.NewConfig(LocalConfig.ConsumerKey,LocalConfig.ConsumerSecret)
