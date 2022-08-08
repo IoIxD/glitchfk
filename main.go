@@ -138,7 +138,7 @@ var lastTypeGiven int
 func randomImageType() (value string) {
 	values := []string{"horizontal","vertical","diagonal","radial","inverse-radial","fucked","noise","wave"}
 	var choice int
-	for(choice == lastTypeGiven && lastTypeGiven != 6) {
+	for(choice == lastTypeGiven) {
 		rand.Seed(time.Now().UnixNano())
 		choice = rand.Intn(len(values))
 	}

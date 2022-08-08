@@ -62,7 +62,6 @@ func NewNoise(density,detail float64) (image.Image, error) {
 		// and each row
 		for x := float64(0); x < WIDTH; x++ {
 			value := math.Abs(noise.Noise2D(x,y))
-			fmt.Println(value)
 			theColor := colors.At(value*2.0)
 			// Set the corresponding pixel
 			img.Set(int(x),int(y), color.NRGBA{
