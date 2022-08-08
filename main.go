@@ -73,6 +73,7 @@ func main() {
 	}
 
 	if(LocalConfig.InProduction) {
+		fmt.Println("starting twitter thread.")
 		TwitterThread()
 	} else {
 		image := DefaultImage()
@@ -136,7 +137,7 @@ func xor(img1, img2 image.Image) (image.Image) {
 
 var lastTypeGiven int
 func randomImageType() (value string) {
-	values := []string{"horizontal","vertical","diagonal","radial","inverse-radial","fucked","noise","wave"}
+	values := []string{"horizontal","vertical","diagonal","radial","inverse-radial","noise","wave"}
 	var choice int
 	for(choice == lastTypeGiven) {
 		rand.Seed(time.Now().UnixNano())
