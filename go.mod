@@ -3,6 +3,7 @@ module github.com/IoIxD/glitchfuckTwitter
 go 1.18
 
 require (
+	github.com/anthonynsimon/bild v0.13.0
 	github.com/drswork/go-twitter v0.0.0-20220710160938-983ef38dcd50
 	github.com/lucasb-eyer/go-colorful v1.2.0
 	github.com/mazznoer/colorgrad v0.9.0
@@ -11,11 +12,8 @@ require (
 )
 
 require (
+	github.com/aquilax/go-perlin v1.1.0 // indirect
 	github.com/google/go-cmp v0.5.8 // indirect
-	github.com/jessevdk/go-flags v1.5.0 // indirect
-	github.com/k0kubun/twitter-auth v0.0.0-20211124073131-aa12d937d7a9 // indirect
-	github.com/mrjones/oauth v0.0.0-20190623134757-126b35219450 // indirect
-	golang.org/x/sys v0.0.0-20210320140829-1e4c9ba3b0c4 // indirect
 )
 
 require (
