@@ -9,6 +9,8 @@ import (
 	"image/png"
 	"math/rand"
 	"os"
+	"runtime"
+	"runtime/pprof"
 	"strings"
 	"time"
 
@@ -26,18 +28,45 @@ var LocalConfig struct {
 	InProduction	bool
 }
 
-const WIDTH = 1024;
-const HEIGHT = 768;
+const WIDTH float64 = 1024;
+const HEIGHT float64 = 768;
 
-const DETAIL = 32768;
+var imageTypes = flag.String("types","","The types of images you want to generate and xor, seperated by commas.")
+var cpuProfile = flag.String("cpuprofile", "", "Debug flag for what file to write the cpu profile to. CPU Profiling is disabled if this is blank.")
+var memProfile = flag.String("memprofile", "", "Debug flag for what file to write the memory profile to. CPU Profiling is disabled if this is blank.")
+var outputFile = flag.String("output","test.png","File to save output to.")
 
 func main() {	
-	// flag for setting up manual generations
-	var imageTypes string
-	flag.StringVar(&imageTypes,"types", "", "The types of images you want to generate and xor, seperated by commas.")
 	flag.Parse()
-	if(imageTypes != "") {
-		types := strings.Split(imageTypes,",")
+    if *cpuProfile != "" {
+        f, err := os.Create(*cpuProfile)
+        if err != nil {
+            fmt.Println("could not create CPU profile: ", err)
+            return
+        }
+        defer f.Close() // error handling omitted for example
+        if err := pprof.StartCPUProfile(f); err != nil {
+            fmt.Println("could not start CPU profile: ", err)
+            return
+        }
+        defer pprof.StopCPUProfile()
+    }
+    if *memProfile != "" {
+        f, err := os.Create(*memProfile)
+        if err != nil {
+            fmt.Println("could not create memory profile: ", err)
+            return
+        }
+        defer f.Close() // error handling omitted for example
+        runtime.GC() // get up-to-date statistics
+        if err := pprof.WriteHeapProfile(f); err != nil {
+            fmt.Println("could not write memory profile: ", err)
+            return
+        }
+    }
+
+	if(*imageTypes != "") {
+		types := strings.Split(*imageTypes,",")
 		var lastImage image.Image
 		var finalImage image.Image
 		for _, v := range types {
@@ -53,7 +82,7 @@ func main() {
 			}
 			lastImage = image
 		}
-		f, _ := os.Create("test.png")
+		f, _ := os.Create(*outputFile)
 		if err := png.Encode(f,finalImage); err != nil {
 			fmt.Println(err)
 		}
@@ -77,7 +106,7 @@ func main() {
 		TwitterThread()
 	} else {
 		image := DefaultImage()
-		f, _ := os.Create("test.png")
+		f, _ := os.Create(*outputFile)
 		f.Write(image)
 		f.Close()
 	}
@@ -137,8 +166,8 @@ func xor(img1, img2 image.Image) (image.Image) {
 
 var lastTypeGiven int
 func randomImageType() (value string) {
-	values := []string{"horizontal","vertical","diagonal","radial","inverse-radial","noise","wave"}
-	var choice int
+	values := []string{"horizontal","vertical","diagonal","radial","inverse-radial","noise","wave","mario64windowtexture"}
+	choice := lastTypeGiven
 	for(choice == lastTypeGiven) {
 		rand.Seed(time.Now().UnixNano())
 		choice = rand.Intn(len(values))
@@ -150,7 +179,7 @@ func randomImageType() (value string) {
 
 func NewImage(imageType string) (image.Image, error) {
 	switch(imageType) {
-		case "horizontal","vertical","diagonal","radial","inverse-radial","fucked":
+		case "horizontal","vertical","diagonal","radial","inverse-radial","area","mario64windowtexture":
 			return NewGradientImage(imageType)
 		case "noise":
 			return NewNormalNoise()
@@ -158,4 +187,14 @@ func NewImage(imageType string) (image.Image, error) {
 			return NewWave()
 	}
 	return nil, nil
+}
+
+type numbers interface {
+	int | float32 | float64
+}
+func FastAbsolute[T numbers](i T) (T) {
+	if(i < 0) {
+		return i*-1
+	}
+	return i
 }
