@@ -1,23 +1,17 @@
 package modules
 
-/*
-import "math"
+import (
+	"fmt"
+	"image"
+)
 
-// "Fluid" image, ported from https://www.shadertoy.com/view/XdcGW2
+// "Fluid" image; https://www.shadertoy.com/view/XdcGW2
 
-type Fluid struct {
-	pixels [][]int
+func init() {
+	//FunctionPool.Add("fluid", NewFluidImage)
 }
 
-func (f Fluid) step() {
-
+func NewFluidImage() (image.Image, error) {
+	fmt.Println("screenshotting fluid image (https://www.shadertoy.com/view/XdcGW2)...")
+	return ShadertoyScreenshot("https://www.shadertoy.com/view/XdcGW2")
 }
-
-func (f Fluid) randomVal(x, y float64) float64 {
-	return fract(math.Sin(dot(Vec2(x, y), Vec2(12.9898, 78.233))) * 43758.5453)
-}
-
-func (f Fluid) getPixel(x, y float64) {
-	return f.pixels[int(y)][int(x)]
-}
-*/

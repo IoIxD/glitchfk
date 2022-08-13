@@ -1,0 +1,17 @@
+{
+  "name": "glitchfuck-twitter-cef",
+  "version": "1.0.0",
+  "description": "i hate node.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chrome": "^0.1.0",
+    "process": "^0.11.10",
+    "puppeteer": "^16.1.0",
+    "puppeteer-core": "^16.1.0"
+  }
+}

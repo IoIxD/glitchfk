@@ -101,3 +101,8 @@ func NewGradientImage(mode string, useFract bool) (image.Image, error) {
 	}
 	return img, nil
 }
+
+func fract(value float64) (float64) {
+	valueRounded := math.Ceil(value)
+	return valueRounded - value
+}

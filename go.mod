@@ -8,6 +8,7 @@ require (
 	github.com/lucasb-eyer/go-colorful v1.2.0
 	github.com/mazznoer/colorgrad v0.9.0
 	github.com/pelletier/go-toml/v2 v2.0.2
+	golang.org/x/image v0.0.0-20220722155232-062f8c9fd539
 )
 
 require github.com/google/go-cmp v0.5.8 // indirect
