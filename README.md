@@ -1,0 +1,1 @@
+This is the code for [@glitchfuck1](https://twitter.com/glitchfuck1). You do not actually need a Twitter bot to use this; it can be compiled and run as a standalone executable for any operating system that can run Go code.
