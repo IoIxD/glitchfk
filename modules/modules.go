@@ -5,10 +5,17 @@ import (
 	"image"
 	"math/rand"
 	"sync"
+	"time"
 )
 
-const WIDTH float64 = 1024
-const HEIGHT float64 = 768
+const NORMAL_WIDTH float64 = 1024
+const NORMAL_HEIGHT float64 = 768
+
+const SUNDAY_WIDTH float64 = 1920
+const SUNDAY_HEIGHT float64 = 1080
+
+var WIDTH float64
+var HEIGHT float64
 
 type ImageFunction func() (image.Image, error)
 
@@ -24,6 +31,14 @@ func init() {
 	FunctionPool = FunctionPoolStruct{}
 	FunctionPool.functions = make(map[string]ImageFunction)
 	FunctionPool.keys = make([]string, 0)
+
+	if(time.Now().Weekday() == 0) {
+		WIDTH = SUNDAY_WIDTH
+		HEIGHT = SUNDAY_HEIGHT
+	} else {
+		WIDTH = NORMAL_WIDTH
+		HEIGHT = NORMAL_HEIGHT
+	}
 }
 
 func (f *FunctionPoolStruct) Add(key string, value ImageFunction) {

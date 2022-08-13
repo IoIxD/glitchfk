@@ -21,85 +21,31 @@ func init() {
 	FunctionPool.Add("wave", func() (image.Image, error) {
 		return NewNoiseLegacy(0.125, 0.125, 8, 2, false)
 	})
-	FunctionPool.Add("perlin-fbm", func() (image.Image, error) {
-		return NewNoise(fastnoiselite.NoiseTypePerlin, fastnoiselite.FractalTypeFBm, 0.002, 5, false)
-	})
-	FunctionPool.Add("perlin-ridged", func() (image.Image, error) {
-		return NewNoise(fastnoiselite.NoiseTypePerlin, fastnoiselite.FractalTypeRidged, 0.002, 5, false)
-	})
-	FunctionPool.Add("perlin-pingpong", func() (image.Image, error) {
-		return NewNoise(fastnoiselite.NoiseTypePerlin, fastnoiselite.FractalTypePingPong, 0.002, 5, false)
-	})
-	FunctionPool.Add("perlin-domain-warp-progressive", func() (image.Image, error) {
-		return NewNoise(fastnoiselite.NoiseTypePerlin, fastnoiselite.FractalTypeDomainWarpProgressive, 0.002, 5, false)
-	})
-	FunctionPool.Add("perlin-domain-warp-independent", func() (image.Image, error) {
-		return NewNoise(fastnoiselite.NoiseTypePerlin, fastnoiselite.FractalTypeDomainWarpIndependent, 0.002, 5, false)
-	})
+	types := map[string]fastnoiselite.NoiseType{
+		"perlin": fastnoiselite.NoiseTypePerlin,
+		"opensimplex2": fastnoiselite.NoiseTypeOpenSimplex2,
+		"cellular": fastnoiselite.NoiseTypeCellular,
+		"valuecubic": fastnoiselite.NoiseTypeValueCubic,
+		"value": fastnoiselite.NoiseTypeValue,
+	}
+	fractal := map[string]fastnoiselite.FractalType{
+		"fbm": fastnoiselite.FractalTypeFBm,
+		"ridged": fastnoiselite.FractalTypeRidged,
+		"pingpong": fastnoiselite.FractalTypePingPong,
+		"domain-warp-progressive": fastnoiselite.FractalTypeDomainWarpProgressive,
+		"domain-warp-independent": fastnoiselite.FractalTypeDomainWarpIndependent,
+	}
 
-	FunctionPool.Add("opensimplex2-fbm", func() (image.Image, error) {
-		return NewNoise(fastnoiselite.NoiseTypeOpenSimplex2, fastnoiselite.FractalTypeFBm, 0.002, 5, false)
-	})
-	FunctionPool.Add("opensimplex2-ridged", func() (image.Image, error) {
-		return NewNoise(fastnoiselite.NoiseTypeOpenSimplex2, fastnoiselite.FractalTypeRidged, 0.002, 5, false)
-	})
-	FunctionPool.Add("opensimplex2-pingpong", func() (image.Image, error) {
-		return NewNoise(fastnoiselite.NoiseTypeOpenSimplex2, fastnoiselite.FractalTypePingPong, 0.002, 5, false)
-	})
-	FunctionPool.Add("opensimplex2-domain-warp-progressive", func() (image.Image, error) {
-		return NewNoise(fastnoiselite.NoiseTypeOpenSimplex2, fastnoiselite.FractalTypeDomainWarpProgressive, 0.002, 5, false)
-	})
-	FunctionPool.Add("opensimplex2-domain-warp-independent", func() (image.Image, error) {
-		return NewNoise(fastnoiselite.NoiseTypeOpenSimplex2, fastnoiselite.FractalTypeDomainWarpIndependent, 0.002, 5, false)
-	})
-
-	FunctionPool.Add("cellular-fbm", func() (image.Image, error) {
-		return NewNoise(fastnoiselite.NoiseTypeCellular, fastnoiselite.FractalTypeFBm, 0.002, 5, false)
-	})
-	FunctionPool.Add("cellular-ridged", func() (image.Image, error) {
-		return NewNoise(fastnoiselite.NoiseTypeCellular, fastnoiselite.FractalTypeRidged, 0.002, 5, false)
-	})
-	FunctionPool.Add("cellular-pingpong", func() (image.Image, error) {
-		return NewNoise(fastnoiselite.NoiseTypeCellular, fastnoiselite.FractalTypePingPong, 0.002, 5, false)
-	})
-	FunctionPool.Add("cellular-domain-warp-progressive", func() (image.Image, error) {
-		return NewNoise(fastnoiselite.NoiseTypeCellular, fastnoiselite.FractalTypeDomainWarpProgressive, 0.002, 5, false)
-	})
-	FunctionPool.Add("cellular-domain-warp-independent", func() (image.Image, error) {
-		return NewNoise(fastnoiselite.NoiseTypeCellular, fastnoiselite.FractalTypeDomainWarpIndependent, 0.002, 5, false)
-	})
-
-	FunctionPool.Add("valuecubic-fbm", func() (image.Image, error) {
-		return NewNoise(fastnoiselite.NoiseTypeValueCubic, fastnoiselite.FractalTypeFBm, 0.002, 5, false)
-	})
-	FunctionPool.Add("valuecubic-ridged", func() (image.Image, error) {
-		return NewNoise(fastnoiselite.NoiseTypeValueCubic, fastnoiselite.FractalTypeRidged, 0.002, 5, false)
-	})
-	FunctionPool.Add("valuecubic-pingpong", func() (image.Image, error) {
-		return NewNoise(fastnoiselite.NoiseTypeValueCubic, fastnoiselite.FractalTypePingPong, 0.002, 5, false)
-	})
-	FunctionPool.Add("valuecubic-domain-warp-progressive", func() (image.Image, error) {
-		return NewNoise(fastnoiselite.NoiseTypeValueCubic, fastnoiselite.FractalTypeDomainWarpProgressive, 0.002, 5, false)
-	})
-	FunctionPool.Add("valuecubic-domain-warp-independent", func() (image.Image, error) {
-		return NewNoise(fastnoiselite.NoiseTypeValueCubic, fastnoiselite.FractalTypeDomainWarpIndependent, 0.002, 5, false)
-	})
-
-	FunctionPool.Add("value-fbm", func() (image.Image, error) {
-		return NewNoise(fastnoiselite.NoiseTypeValue, fastnoiselite.FractalTypeFBm, 0.002, 5, false)
-	})
-	FunctionPool.Add("value-ridged", func() (image.Image, error) {
-		return NewNoise(fastnoiselite.NoiseTypeValue, fastnoiselite.FractalTypeRidged, 0.002, 5, false)
-	})
-	FunctionPool.Add("value-pingpong", func() (image.Image, error) {
-		return NewNoise(fastnoiselite.NoiseTypeValue, fastnoiselite.FractalTypePingPong, 0.002, 5, false)
-	})
-	FunctionPool.Add("value-domain-warp-progressive", func() (image.Image, error) {
-		return NewNoise(fastnoiselite.NoiseTypeValue, fastnoiselite.FractalTypeDomainWarpProgressive, 0.002, 5, false)
-	})
-	FunctionPool.Add("value-domain-warp-independent", func() (image.Image, error) {
-		return NewNoise(fastnoiselite.NoiseTypeValue, fastnoiselite.FractalTypeDomainWarpIndependent, 0.002, 5, false)
-	})
+	for k1, v1 := range types {
+		for k2, v2 := range fractal {
+			FunctionPool.Add(k1+"-"+k2, func() (image.Image, error) {
+				return NewNoise(v1, v2, 0.002, 5, false)
+			})
+			FunctionPool.Add(k1+"-"+k2+"-colored", func() (image.Image, error) {
+				return NewNoise(v1, v2, 0.002, 5, true)
+			})
+		}
+	}
 }
 
 func NewNoise(noiseType fastnoiselite.NoiseType, fractalType fastnoiselite.FractalType, frequency float64, octaves int32, hasColor bool) (image.Image, error) {
