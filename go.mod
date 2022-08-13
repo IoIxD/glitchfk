@@ -19,5 +19,3 @@ require (
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/mazznoer/csscolorparser v0.1.2 // indirect
 )
-
-replace github.com/aquilax/go-perlin => /home/gavin/Projects/go-perlin

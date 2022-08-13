@@ -1,7 +1,6 @@
-package main
+package modules
 
 import (
-	"fmt"
 	"image"
 	"image/color"
 	"math"
@@ -14,67 +13,61 @@ import (
 )
 
 var density = 1.0
-var detail = 1.0/256.0
+var detail = 1.0 / 256.0
 var depth = 256.0
 
-func NewNormalNoise() (image.Image, error) {
-	fmt.Printf("generating noise...\n")
-	return NewNoise(density,detail,1,255,true)
+func init() {
+	FunctionPool.Add("noise", func() (image.Image, error) {
+		return NewNoise(density, detail, 1, 255, true)
+	})
+	FunctionPool.Add("wave", func() (image.Image, error) {
+		return NewNoise(0.125, 0.125, 8, 2, false)
+	})
 }
 
-func NewWave() (image.Image, error) {
-	fmt.Printf("generating wave...\n")
-	return NewNoise(0.125,0.125,8,2,false)
-}
-
-func NewNoise(density,detail float64, divide, mul float64, hasColor bool) (image.Image, error) {
-	start := time.Now().UnixMilli()
-
+func NewNoise(density, detail float64, divide, mul float64, hasColor bool) (image.Image, error) {
 	// Create a noise image
-	noise := perlin.NewPerlin(density,detail,50,time.Now().Unix())
+	noise := perlin.NewPerlin(density, detail, 50, time.Now().Unix())
 
-	var wg sync.WaitGroup;
-	wg.Add(int(WIDTH*HEIGHT))
+	var wg sync.WaitGroup
+	wg.Add(int(WIDTH * HEIGHT))
 
 	// Create a gradient to use for the colors
 	colors, err := NewGradient()
-	if(err != nil) {
+	if err != nil {
 		return nil, err
 	}
 
-	img := image.NewNRGBA(image.Rect(0, 0, int(WIDTH), int(HEIGHT)));
+	img := image.NewNRGBA(image.Rect(0, 0, int(WIDTH), int(HEIGHT)))
 
 	// For each column in the image
 	for y := float64(0); y < HEIGHT; y++ {
 		// and each row
 		for x := float64(0); x < WIDTH; x++ {
 			// branch off into another thread
-			go func(x,y float64) {
+			go func(x, y float64) {
 				// generate the noise value.
-				value := math.Abs(noise.Noise2D(x,y))/divide
+				value := math.Abs(noise.Noise2D(x, y)) / divide
 				var theColor color.NRGBA
-				if(hasColor) {
+				if hasColor {
 					theColor_ := colors.At(value)
 					theColor = color.NRGBA{
-						R: uint8(theColor_.R*mul),
-						G: uint8(theColor_.G*mul),
-						B: uint8(theColor_.B*mul),
+						R: uint8(theColor_.R * mul),
+						G: uint8(theColor_.G * mul),
+						B: uint8(theColor_.B * mul),
 						A: 255,
 					}
 				} else {
-					theColor = color.NRGBA{uint8(value),uint8(value),uint8(value),255}
+					theColor = color.NRGBA{uint8(value), uint8(value), uint8(value), 255}
 				}
 				// Set the corresponding pixel
 				img.Set(int(x), int(y), theColor)
 				wg.Done()
-			}(x,y)
+			}(x, y)
 		}
 	}
 
 	wg.Wait()
-
-	end := time.Now().UnixMilli()
-	fmt.Println(end-start, "ms")
 	return img, nil
 }
 
