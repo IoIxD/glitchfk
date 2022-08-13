@@ -5,6 +5,7 @@ go 1.18
 require (
 	github.com/aquilax/go-perlin v1.1.0
 	github.com/drswork/go-twitter v0.0.0-20220710160938-983ef38dcd50
+	github.com/furui/fastnoiselite-go v0.0.0-20220802181908-5f37e99ef939
 	github.com/lucasb-eyer/go-colorful v1.2.0
 	github.com/mazznoer/colorgrad v0.9.0
 	github.com/pelletier/go-toml/v2 v2.0.2
