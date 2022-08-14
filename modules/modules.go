@@ -66,9 +66,11 @@ func (f *FunctionPoolStruct) Get(key string) ImageFunction {
 	return f.functions[key]
 }
 
-func (f FunctionPoolStruct) Random() ImageFunction {
+func (f *FunctionPoolStruct) Random() ImageFunction {
+	f.Lock()
 	randomIndex := rand.Intn(len(f.keys))
 	key := f.keys[randomIndex]
-	fmt.Printf("generating %v gradient...\n", key)
+	fmt.Printf("generating %v image...\n", key)
+	f.Unlock()
 	return f.functions[key]
 }

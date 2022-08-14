@@ -16,17 +16,16 @@ const DETAIL = 32768
 
 func init() {
 	types := []string{
-		"horizontal", "vertical", "diagonal", "radial", "inverse-radial",
-		"area", "mario64windowtexture",
+		"horizontal", "vertical", "diagonal", "radial", "inverse-radial", "mario64windowtexture",
 	}
 	for _, v := range types {
 		FunctionPool.Add(v, NewGradientFunction(v, false))
 		FunctionPool.Add("segmented-"+v, NewGradientFunction(v, true))
 
-		// add them four more times to artifically increase their chances over the hoard of noise functions
+		// add them three more times to artifically increase their chances over the hoard of noise functions
 		for i := 0; i < 3; i++ {
-			FunctionPool.Add(v+fmt.Sprintf("%v",i), NewGradientFunction(v, false))
-			FunctionPool.Add("segmented-"+fmt.Sprintf("%v",i)+v, NewGradientFunction(v, true))
+			FunctionPool.Add(v+"_"+fmt.Sprintf("%v",i), NewGradientFunction(v, false))
+			FunctionPool.Add("segmented-"+v+"_"+fmt.Sprintf("%v",i), NewGradientFunction(v, true))
 		}
 	}
 }
