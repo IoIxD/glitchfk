@@ -12,6 +12,7 @@ import (
 	"runtime"
 	"runtime/pprof"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/IoIxD/glitchfuckTwitter/modules"
@@ -127,15 +128,28 @@ func DefaultImage() []byte {
 	var approved bool
 	var finalgrad image.Image
 	for(!approved) {
-		grad1, err := modules.FunctionPool.Random()()
-		if err != nil {
-			fmt.Println(err)
-		}
+		var grad1, grad2 image.Image
+		var wg sync.WaitGroup
+		var err error
 
-		grad2, err := modules.FunctionPool.Random()()
-		if err != nil {
-			fmt.Println(err)
-		}
+		wg.Add(2)
+		go func() {
+			grad1, err = modules.FunctionPool.Random()()
+			if err != nil {
+				fmt.Println(err)
+			}
+			wg.Done()
+		}()
+
+		go func() {
+			grad2, err = modules.FunctionPool.Random()()
+			if err != nil {
+				fmt.Println(err)
+			}
+			wg.Done()
+		}()
+
+		wg.Wait()
 
 		finalgrad = xor(grad1, grad2)
 		contrast := ContrastOf(finalgrad)
@@ -146,6 +160,7 @@ func DefaultImage() []byte {
 		}
 		fmt.Println(contrast)
 	}
+
 	buf := new(bytes.Buffer)
 	if err := png.Encode(buf, finalgrad); err != nil {
 		fmt.Println(err)
@@ -188,6 +203,9 @@ func NewImage(imageType string) (image.Image, error) {
 func ContrastOf(img image.Image) (int) {
 	var contrastValues []float64
 	var lastPixel float64
+	var wg sync.WaitGroup
+
+	wg.Add(img.Bounds().Max.Y)
 	for y := float64(0); y < float64(img.Bounds().Max.Y); y++ {
 		var contrastValues_ []float64 
 		// and each row
@@ -202,7 +220,9 @@ func ContrastOf(img image.Image) (int) {
 		}
 		sum = sum/float64(len(contrastValues_))
 		contrastValues = append(contrastValues, sum)
+		wg.Done()
 	} 
+	wg.Wait()
 	var sum float64
 	for _, v := range contrastValues{
 		sum += v
