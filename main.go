@@ -153,7 +153,7 @@ func DefaultImage() []byte {
 
 		finalgrad = xor(grad1, grad2)
 		contrast := ContrastOf(finalgrad)
-		if(contrast < 300) {
+		if(contrast < 700) {
 			approved = true
 		} else {
 			fmt.Println("Skipping, average contrast is too high.")
@@ -200,18 +200,16 @@ func NewImage(imageType string) (image.Image, error) {
 	return image, err
 }
 
-func ContrastOf(img image.Image) (int) {
-	var contrastValues []float64
+func ContrastOf(img image.Image) (float64) {
+	var contrastValues float64
+	var contrastNum float64
 	var lastPixel float64
-	var wg sync.WaitGroup
-
-	wg.Add(img.Bounds().Max.Y)
 	for y := float64(0); y < float64(img.Bounds().Max.Y); y++ {
 		var contrastValues_ []float64 
 		// and each row
 		for x := float64(0); x < float64(img.Bounds().Max.X); x++ {
 			r, g, b, _ := img.At(int(x),int(y)).RGBA()
-			contrastValues_ = append(contrastValues, math.Abs(lastPixel-float64(r+g+b)))
+			contrastValues_ = append(contrastValues_, math.Abs(lastPixel-float64(r+g+b)))
 			lastPixel = float64(r+g+b)
 		}
 		var sum float64
@@ -219,13 +217,8 @@ func ContrastOf(img image.Image) (int) {
 			sum += v
 		}
 		sum = sum/float64(len(contrastValues_))
-		contrastValues = append(contrastValues, sum)
-		wg.Done()
+		contrastValues += sum
+		contrastNum++
 	} 
-	wg.Wait()
-	var sum float64
-	for _, v := range contrastValues{
-		sum += v
-	}
-	return int(sum)/len(contrastValues)
+	return contrastValues/contrastNum
 }
