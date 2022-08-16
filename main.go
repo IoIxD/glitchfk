@@ -7,6 +7,7 @@ import (
 	"image"
 	"image/color"
 	"image/png"
+	"math"
 	"os"
 	"runtime"
 	"runtime/pprof"
@@ -123,18 +124,28 @@ func WaitFor(int time.Duration) <-chan time.Time {
 }
 
 func DefaultImage() []byte {
-	grad1, err := modules.FunctionPool.Random()()
-	if err != nil {
-		fmt.Println(err)
+	var approved bool
+	var finalgrad image.Image
+	for(!approved) {
+		grad1, err := modules.FunctionPool.Random()()
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		grad2, err := modules.FunctionPool.Random()()
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		finalgrad = xor(grad1, grad2)
+		contrast := ContrastOf(finalgrad)
+		if(contrast < 300) {
+			approved = true
+		} else {
+			fmt.Println("Skipping, average contrast is too high.")
+		}
+		fmt.Println(contrast)
 	}
-
-	grad2, err := modules.FunctionPool.Random()()
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	finalgrad := xor(grad1, grad2)
-
 	buf := new(bytes.Buffer)
 	if err := png.Encode(buf, finalgrad); err != nil {
 		fmt.Println(err)
@@ -170,16 +181,31 @@ func xor(img1, img2 image.Image) image.Image {
 var lastTypeGiven int
 
 func NewImage(imageType string) (image.Image, error) {
-	return modules.FunctionPool.Get(imageType)()
+	image, err := modules.FunctionPool.Get(imageType)()
+	return image, err
 }
 
-type numbers interface {
-	int | float32 | float64
-}
-
-func FastAbsolute[T numbers](i T) T {
-	if i < 0 {
-		return i * -1
+func ContrastOf(img image.Image) (int) {
+	var contrastValues []float64
+	var lastPixel float64
+	for y := float64(0); y < float64(img.Bounds().Max.Y); y++ {
+		var contrastValues_ []float64 
+		// and each row
+		for x := float64(0); x < float64(img.Bounds().Max.X); x++ {
+			r, g, b, _ := img.At(int(x),int(y)).RGBA()
+			contrastValues_ = append(contrastValues, math.Abs(lastPixel-float64(r+g+b)))
+			lastPixel = float64(r+g+b)
+		}
+		var sum float64
+		for _, v := range contrastValues_{
+			sum += v
+		}
+		sum = sum/float64(len(contrastValues_))
+		contrastValues = append(contrastValues, sum)
+	} 
+	var sum float64
+	for _, v := range contrastValues{
+		sum += v
 	}
-	return i
+	return int(sum)/len(contrastValues)
 }
