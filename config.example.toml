@@ -1,6 +1,10 @@
-ConsumerKey=
-ConsumerSecret=
-AccessToken=
-AccessSecret=
-Interval=
+TwitterConsumerKey=
+TwitterConsumerSecret=
+TwitterAccessToken=
+TwitterAccessSecret=
+TwitterInterval=
+
+DiscordAuthToken=
+DiscordID=
+
 InProduction=

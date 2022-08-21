@@ -63,7 +63,12 @@ func (f *FunctionPoolStruct) add(key string, value ImageFunction) {
 }
 
 func (f *FunctionPoolStruct) Get(key string) ImageFunction {
-	return f.functions[key]
+	function, ok := f.functions[key]
+	if(ok) {
+		return function
+	} else {
+		return nil
+	}
 }
 
 func (f *FunctionPoolStruct) Random() ImageFunction {

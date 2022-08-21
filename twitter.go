@@ -18,20 +18,20 @@ var OAuth1Token *oauth1.Token
 var Oauth1Client *http.Client
 
 func InitTwitter(token, secret string) {
-	OAuth1Config = oauth1.NewConfig(LocalConfig.ConsumerKey,LocalConfig.ConsumerSecret)
+	OAuth1Config = oauth1.NewConfig(LocalConfig.TwitterConsumerKey,LocalConfig.TwitterConsumerSecret)
 	OAuth1Token = oauth1.NewToken(token,secret)
 	Oauth1Client = OAuth1Config.Client(oauth1.NoContext,OAuth1Token)
 	client = twitter.NewClient(Oauth1Client)
 } 
 
 func TwitterThread() {
-	duration, err := time.ParseDuration(LocalConfig.Interval)
+	duration, err := time.ParseDuration(LocalConfig.TwitterInterval)
 	if(err != nil) {
 		fmt.Println(err)
 		return
 	}
 
-	InitTwitter(LocalConfig.OAuthToken,LocalConfig.OAuthSecret)
+	InitTwitter(LocalConfig.TwitterOAuthToken,LocalConfig.TwitterOAuthSecret)
 	sigs := make(chan os.Signal, 1)
 	signal.Notify(sigs, os.Interrupt, syscall.SIGTERM)
 	for {
@@ -40,7 +40,7 @@ func TwitterThread() {
 				os.Exit(0)
 
 			case <-WaitFor(duration):
-				image := DefaultImage()
+				image, _ := DefaultImage(true) // ignore errors since this is something that posts daily without user interaction.
 				result, resp, err := client.Media.Upload(image,"image/png")
 				if(err != nil) {
 					fmt.Println(err)

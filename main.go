@@ -20,13 +20,15 @@ import (
 )
 
 var LocalConfig struct {
-	ConsumerKey    string
-	ConsumerSecret string
-	AccessToken    string
-	AccessSecret   string
-	OAuthToken     string
-	OAuthSecret    string
-	Interval       string
+	TwitterConsumerKey    string
+	TwitterConsumerSecret string
+	TwitterAccessToken    string
+	TwitterAccessSecret   string
+	TwitterOAuthToken     string
+	TwitterOAuthSecret    string
+	TwitterInterval       string
+	DiscordAuthToken 	  string
+	DiscordID			  string
 	InProduction   bool
 }
 
@@ -64,25 +66,16 @@ func main() {
 		}
 	}
 
+	// if image types were given, run the command through them.
 	if *imageTypes != "" {
-		types := strings.Split(*imageTypes, ",")
-		var lastImage image.Image
-		var finalImage image.Image
-		for _, v := range types {
-			image, err := NewImage(v)
-			if err != nil {
-				fmt.Println(err)
-				return
-			}
-			if lastImage != nil {
-				finalImage = xor(lastImage, image)
-			} else {
-				finalImage = image
-			}
-			lastImage = image
+		image, err := ImageViaTypes(*imageTypes)
+		if(err != nil) {
+			fmt.Println(err)
+			return
 		}
 		f, _ := os.Create(*outputFile)
-		if err := png.Encode(f, finalImage); err != nil {
+		_, err = f.Write(image)
+		if(err != nil) {
 			fmt.Println(err)
 		}
 		return
@@ -108,9 +101,15 @@ func main() {
 
 	if LocalConfig.InProduction {
 		fmt.Println("starting twitter thread.")
-		TwitterThread()
+		go TwitterThread()
+		fmt.Println("starting discord thread.")
+		DiscordThread()
 	} else {
-		image := DefaultImage()
+		image, err := DefaultImage(true)
+		if(err != nil) {
+			fmt.Println(err)
+			return
+		}
 		f, _ := os.Create(*outputFile)
 		f.Write(image)
 		f.Close()
@@ -124,51 +123,82 @@ func WaitFor(int time.Duration) <-chan time.Time {
 	return time.After(dur)
 }
 
-func DefaultImage() []byte {
+func ImageViaTypes(types_ string) ([]byte, error)  {
+	types := strings.Split(types_, ",")
+	var lastImage image.Image
+	var finalImage image.Image
+	for _, v := range types {
+		image, err := NewImage(v)
+		if err != nil {
+			return nil, err
+		}
+		if lastImage != nil {
+			finalImage = xor(lastImage, image)
+		} else {
+			finalImage = image
+		}
+		lastImage = image
+	}
+
+	buf := new(bytes.Buffer)
+	if err := png.Encode(buf, finalImage); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+		return nil, nil // shut up compiler
+	} else {
+		bytes := buf.Bytes()
+		return bytes, nil
+	}
+}
+
+func DefaultImage(forceLowContrast bool) ([]byte, error) {
 	var approved bool
 	var finalgrad image.Image
 	for(!approved) {
 		var grad1, grad2 image.Image
 		var wg sync.WaitGroup
-		var err error
-
+		var err1, err2 error
 		wg.Add(2)
 		go func() {
-			grad1, err = modules.FunctionPool.Random()()
-			if err != nil {
-				fmt.Println(err)
-			}
+			grad1, err1 = modules.FunctionPool.Random()()
 			wg.Done()
 		}()
 
 		go func() {
-			grad2, err = modules.FunctionPool.Random()()
-			if err != nil {
-				fmt.Println(err)
-			}
+			grad2, err2 = modules.FunctionPool.Random()()
 			wg.Done()
 		}()
 
 		wg.Wait()
 
-		finalgrad = xor(grad1, grad2)
-		contrast := ContrastOf(finalgrad)
-		if(contrast < 700) {
-			approved = true
-		} else {
-			fmt.Println("Skipping, average contrast is too high.")
+		if(err1 != nil) {
+			return nil, err1
 		}
-		fmt.Println(contrast)
+		if(err2 != nil) {
+			return nil, err2
+		}
+
+		finalgrad = xor(grad1, grad2)
+		if(forceLowContrast) {
+			contrast := ContrastOf(finalgrad)
+			if(contrast < 700) {
+				approved = true
+			} else {
+				fmt.Println("Skipping, average contrast is too high.")
+			}
+		} else {
+			approved = true
+		}
 	}
 
 	buf := new(bytes.Buffer)
 	if err := png.Encode(buf, finalgrad); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
-		return nil // shut up compiler
+		return nil, nil // shut up compiler
 	} else {
 		bytes := buf.Bytes()
-		return bytes
+		return bytes, nil
 	}
 }
 
@@ -196,7 +226,11 @@ func xor(img1, img2 image.Image) image.Image {
 var lastTypeGiven int
 
 func NewImage(imageType string) (image.Image, error) {
-	image, err := modules.FunctionPool.Get(imageType)()
+	imageFunc := modules.FunctionPool.Get(imageType)
+	if(imageFunc == nil) {
+		return nil, fmt.Errorf("Invalid type %v.\n",imageType)
+	}
+	image, err := imageFunc()
 	return image, err
 }
 
