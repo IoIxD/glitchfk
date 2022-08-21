@@ -30,9 +30,9 @@ func init() {
 	}
 }
 
-func NewGradientFunction(mode string, fract bool) func() (image.Image, error) {
-	return func() (image.Image, error) {
-		return NewGradientImage(mode, fract)
+func NewGradientFunction(mode string, fract bool) ImageFunction {
+	return func(width, height float64) (image.Image, error) {
+		return NewGradientImage(mode, fract, width, height)
 	}
 }
 
@@ -53,38 +53,38 @@ func NewGradient() (colorgrad.Gradient, error) {
 	}
 	return grad, err
 }
-func NewGradientImage(mode string, useFract bool) (image.Image, error) {
+func NewGradientImage(mode string, useFract bool, width, height float64) (image.Image, error) {
 	grad, err := NewGradient()
 	if err != nil {
 		return nil, err
 	}
 
-	img := image.NewNRGBA(image.Rect(0, 0, int(WIDTH), int(HEIGHT)))
-	offsetX := float64(rand.Intn(int(WIDTH)))
-	offsetY := float64(rand.Intn(int(HEIGHT)))
+	img := image.NewNRGBA(image.Rect(0, 0, int(width), int(height)))
+	offsetX := float64(rand.Intn(int(width)))
+	offsetY := float64(rand.Intn(int(height)))
 	mul := float64(rand.Intn(5))
 	// For each column in the image
-	for y_ := float64(0); y_ < HEIGHT; y_++ {
+	for y_ := float64(0); y_ < height; y_++ {
 		y := y_ + offsetY
 		// and each row
-		for x_ := float64(0); x_ < WIDTH; x_++ {
+		for x_ := float64(0); x_ < width; x_++ {
 			x := x_ - offsetX
 			var colorfulColor colorful.Color
 			var position float64
 			switch mode {
 			case "horizontal":
-				position = x / WIDTH
+				position = x / width
 			case "vertical":
-				position = y / HEIGHT
+				position = y / height
 			case "diagonal":
-				position = (x / WIDTH) + (y / HEIGHT)
+				position = (x / width) + (y / height)
 			case "radial":
-				position = math.Cos(x/WIDTH)*mul + math.Sin(y/HEIGHT)*mul
+				position = math.Cos(x/width)*mul + math.Sin(y/height)*mul
 			case "inverse-radial":
-				position = math.Cos(y/HEIGHT)*mul + math.Sin(x/WIDTH)*mul
+				position = math.Cos(y/height)*mul + math.Sin(x/width)*mul
 			case "mario64windowtexture":
-				adj := ((WIDTH / 2) - x)
-				opp := ((HEIGHT / 2) - y)
+				adj := ((width / 2) - x)
+				opp := ((height / 2) - y)
 				ctan := opp / adj
 				tan := adj / opp
 				position = math.Cbrt(math.Abs(tan - ctan))

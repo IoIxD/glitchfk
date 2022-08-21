@@ -26,6 +26,16 @@ var command = discordgo.ApplicationCommand{
 			Description: "Don't return image if average contrast is high. Used for Twitter bot. May cause bot to not respond.",
 			Type: discordgo.ApplicationCommandOptionBoolean,
 		},
+		{
+			Name: 	"width",
+			Description: "Width of the image. Default is 640. Max is 1024.",
+			Type: discordgo.ApplicationCommandOptionInteger,
+		},
+		{
+			Name: 	"height",
+			Description: "Height of the image. Default is 480. Max is 768.",
+			Type: discordgo.ApplicationCommandOptionInteger,
+		},
 	},
 }
 
@@ -102,8 +112,9 @@ func RefreshSlashCommands() {
 // The main command 
 func mainCommand(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	var sent bool
+	// Thread to check if the command has finished within the time discord allows.
 	go func() {
-		time.Sleep(time.Millisecond * 2500)
+		time.Sleep(time.Millisecond * 2800)
 		if(!sent) {
 			s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 				Type: discordgo.InteractionResponseChannelMessageWithSource,
@@ -111,26 +122,50 @@ func mainCommand(s *discordgo.Session, i *discordgo.InteractionCreate) {
 					Content: "The bot spend too long regenerating the image and Discord will not let bots take longer then three seconds. Sorry.",
 				},
 			})
+			return
 		}
 	}()
+	// Thread that generates the image.
 	go func() {
 		options := i.ApplicationCommandData().Options
-
 		optionMap := make(map[string]*discordgo.ApplicationCommandInteractionDataOption, len(options))
 		for _, v := range options {
 			optionMap[v.Name] = v
 		}
 
+		// unmarshal options into go.
 		forceLowContrast := false 
 		if flc, ok := optionMap["forcelowcontrast"]; ok {
-			forceLowContrast = flc.Value.(bool)
+			forceLowContrast_, ok := flc.Value.(bool)
+			if(ok) {
+				forceLowContrast = forceLowContrast_
+			}
 		}
-
+		var width float64 = 640
+		if widthop, ok := optionMap["width"]; ok {
+			width_, ok := widthop.Value.(int)
+			if(ok) {
+				width = float64(width_)
+				if(width >= 1024) {
+					width = 1024
+				}
+			}
+		}
+		var height float64 = 480
+		if heightop, ok := optionMap["height"]; ok {
+			height_, ok := heightop.Value.(int)
+			if(ok) {
+				height = float64(height_)
+				if(height >= 768) {
+					height = 768
+				}
+			}
+		}
 		var image []byte
 		if types, ok := optionMap["types"]; ok {
-			image, err = ImageViaTypes(types.Value.(string))
+			image, err = ImageViaTypes(types.Value.(string),width,height)
 		} else {
-			image, err = DefaultImage(forceLowContrast)
+			image, err = DefaultImage(forceLowContrast,width,height)
 		}
 
 		if(err != nil) {

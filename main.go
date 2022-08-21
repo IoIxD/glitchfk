@@ -36,6 +36,8 @@ var imageTypes = flag.String("types", "", "The types of images you want to gener
 var cpuProfile = flag.String("cpuprofile", "", "Debug flag for what file to write the cpu profile to. CPU Profiling is disabled if this is blank.")
 var memProfile = flag.String("memprofile", "", "Debug flag for what file to write the memory profile to. CPU Profiling is disabled if this is blank.")
 var outputFile = flag.String("output", "test.png", "File to save output to.")
+var widthOpt = flag.Float64("width", 1024, "Debug flag for what file to write the memory profile to. CPU Profiling is disabled if this is blank.")
+var heightOpt = flag.Float64("height", 768, "File to save output to.")
 
 func main() {
 	flag.Parse()
@@ -68,7 +70,7 @@ func main() {
 
 	// if image types were given, run the command through them.
 	if *imageTypes != "" {
-		image, err := ImageViaTypes(*imageTypes)
+		image, err := ImageViaTypes(*imageTypes, *widthOpt, *heightOpt)
 		if(err != nil) {
 			fmt.Println(err)
 			return
@@ -105,7 +107,7 @@ func main() {
 		fmt.Println("starting discord thread.")
 		DiscordThread()
 	} else {
-		image, err := DefaultImage(true)
+		image, err := DefaultImage(true,*widthOpt,*heightOpt)
 		if(err != nil) {
 			fmt.Println(err)
 			return
@@ -123,12 +125,12 @@ func WaitFor(int time.Duration) <-chan time.Time {
 	return time.After(dur)
 }
 
-func ImageViaTypes(types_ string) ([]byte, error)  {
+func ImageViaTypes(types_ string, width, height float64) ([]byte, error)  {
 	types := strings.Split(types_, ",")
 	var lastImage image.Image
 	var finalImage image.Image
 	for _, v := range types {
-		image, err := NewImage(v)
+		image, err := NewImage(v, width, height)
 		if err != nil {
 			return nil, err
 		}
@@ -151,7 +153,7 @@ func ImageViaTypes(types_ string) ([]byte, error)  {
 	}
 }
 
-func DefaultImage(forceLowContrast bool) ([]byte, error) {
+func DefaultImage(forceLowContrast bool, width, height float64) ([]byte, error) {
 	var approved bool
 	var finalgrad image.Image
 	for(!approved) {
@@ -160,12 +162,12 @@ func DefaultImage(forceLowContrast bool) ([]byte, error) {
 		var err1, err2 error
 		wg.Add(2)
 		go func() {
-			grad1, err1 = modules.FunctionPool.Random()()
+			grad1, err1 = modules.FunctionPool.Random()(width,height)
 			wg.Done()
 		}()
 
 		go func() {
-			grad2, err2 = modules.FunctionPool.Random()()
+			grad2, err2 = modules.FunctionPool.Random()(width,height)
 			wg.Done()
 		}()
 
@@ -225,12 +227,12 @@ func xor(img1, img2 image.Image) image.Image {
 
 var lastTypeGiven int
 
-func NewImage(imageType string) (image.Image, error) {
+func NewImage(imageType string, width, height float64) (image.Image, error) {
 	imageFunc := modules.FunctionPool.Get(imageType)
 	if(imageFunc == nil) {
 		return nil, fmt.Errorf("Invalid type %v.\n",imageType)
 	}
-	image, err := imageFunc()
+	image, err := imageFunc(width,height)
 	return image, err
 }
 

@@ -18,8 +18,8 @@ var detail = 1.0 / 256.0
 var depth = 256.0
 
 func init() {
-	FunctionPool.Add("wave", func() (image.Image, error) {
-		return NewNoiseLegacy(0.125, 0.125, 8, 2, false)
+	FunctionPool.Add("wave", func(width, height float64) (image.Image, error) {
+		return NewNoiseLegacy(0.125, 0.125, 8, 2, false, width, height)
 	})
 	types := map[string]fastnoiselite.NoiseType{
 		"perlin": fastnoiselite.NoiseTypePerlin,
@@ -38,17 +38,17 @@ func init() {
 
 	for k1, v1 := range types {
 		for k2, v2 := range fractal {
-			FunctionPool.Add(k1+"-"+k2, func() (image.Image, error) {
-				return NewNoise(v1, v2, 0.002, 5, false)
+			FunctionPool.Add(k1+"-"+k2, func(width, height float64) (image.Image, error) {
+				return NewNoise(v1, v2, 0.002, 5, false, width, height)
 			})
-			FunctionPool.Add(k1+"-"+k2+"-colored", func() (image.Image, error) {
-				return NewNoise(v1, v2, 0.002, 5, true)
+			FunctionPool.Add(k1+"-"+k2+"-colored", func(width, height float64) (image.Image, error) {
+				return NewNoise(v1, v2, 0.002, 5, true, width, height)
 			})
 		}
 	}
 }
 
-func NewNoise(noiseType fastnoiselite.NoiseType, fractalType fastnoiselite.FractalType, frequency float64, octaves int32, hasColor bool) (image.Image, error) {
+func NewNoise(noiseType fastnoiselite.NoiseType, fractalType fastnoiselite.FractalType, frequency float64, octaves int32, hasColor bool, width, height float64) (image.Image, error) {
 	// Create a noise image
 	noise := fastnoiselite.NewNoise()
 	noise.Seed = int32(time.Now().UnixNano())
@@ -58,9 +58,9 @@ func NewNoise(noiseType fastnoiselite.NoiseType, fractalType fastnoiselite.Fract
 	noise.SetFractalOctaves(octaves)
 
 	var wg sync.WaitGroup
-	wg.Add(int(WIDTH * HEIGHT))
+	wg.Add(int(width * height))
 
-	img := image.NewNRGBA(image.Rect(0, 0, int(WIDTH), int(HEIGHT)))
+	img := image.NewNRGBA(image.Rect(0, 0, int(width), int(height)))
 
 	// Create a gradient to use for the colors
 	colors, err := NewGradient()
@@ -69,9 +69,9 @@ func NewNoise(noiseType fastnoiselite.NoiseType, fractalType fastnoiselite.Fract
 	}
 
 	// For each column in the image
-	for y := float64(0); y < HEIGHT; y++ {
+	for y := float64(0); y < height; y++ {
 		// and each row
-		for x := float64(0); x < WIDTH; x++ {
+		for x := float64(0); x < width; x++ {
 			// branch off into another thread
 			go func(x, y float64) {
 				// generate the noise value.
@@ -99,12 +99,12 @@ func NewNoise(noiseType fastnoiselite.NoiseType, fractalType fastnoiselite.Fract
 	return img, nil
 }
 
-func NewNoiseLegacy(density, detail float64, divide, mul float64, hasColor bool) (image.Image, error) {
+func NewNoiseLegacy(density, detail float64, divide, mul float64, hasColor bool, width, height float64) (image.Image, error) {
 	// Create a noise image
 	noise := perlin.NewPerlin(density, detail, 50, time.Now().Unix())
 
 	var wg sync.WaitGroup
-	wg.Add(int(WIDTH * HEIGHT))
+	wg.Add(int(width * height))
 
 	// Create a gradient to use for the colors
 	colors, err := NewGradient()
@@ -112,12 +112,12 @@ func NewNoiseLegacy(density, detail float64, divide, mul float64, hasColor bool)
 		return nil, err
 	}
 
-	img := image.NewNRGBA(image.Rect(0, 0, int(WIDTH), int(HEIGHT)))
+	img := image.NewNRGBA(image.Rect(0, 0, int(width), int(height)))
 
 	// For each column in the image
-	for y := float64(0); y < HEIGHT; y++ {
+	for y := float64(0); y < height; y++ {
 		// and each row
-		for x := float64(0); x < WIDTH; x++ {
+		for x := float64(0); x < width; x++ {
 			// branch off into another thread
 			go func(x, y float64) {
 				// generate the noise value.
@@ -154,11 +154,11 @@ func NewWave() (image.Image, error) {
 	// Create a fucked noise image
 	noise := perlin.NewPerlin(0.125,0.125,50,time.Now().Unix())
 
-	img := image.NewNRGBA(image.Rect(0, 0, int(WIDTH), int(HEIGHT)));
+	img := image.NewNRGBA(image.Rect(0, 0, int(width), int(height)));
 	// For each column in the image
-	for y := float64(0); y < HEIGHT; y++ {
+	for y := float64(0); y < height; y++ {
 		// and each row
-		for x := float64(0); x < WIDTH; x++ {
+		for x := float64(0); x < width; x++ {
 			wg.Add(1)
 			go func(x,y float64) {
 				value := math.Abs(noise.Noise2D(x,y))/8
