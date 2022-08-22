@@ -64,7 +64,7 @@ func DiscordThread() {
 
 	RemoveSlashCommands()
 
-	RefreshSlashCommands()
+	RefreshSlashCommands(true)
 	go RefreshSlashCommandsThread()
 
 	discord.Open()
@@ -77,7 +77,7 @@ func RefreshSlashCommandsThread() {
 	for {
 		select {
 			case <-ticker.C:
-				RefreshSlashCommands()
+				RefreshSlashCommands(false)
 		}
 	}
 }
@@ -101,11 +101,14 @@ func RemoveSlashCommands() {
 
 
 // Refresh the slash commands
-func RefreshSlashCommands() {
+func RefreshSlashCommands(nameServers bool) {
 	for _, v := range discord.State.Guilds {
 		_, err := discord.ApplicationCommandCreate(discord.State.User.ID, v.ID, &command)
 		if(err != nil) {
 			fmt.Println(err)
+		}
+		if(nameServers) {
+			fmt.Printf("initialized command in %v\n", v.Name)
 		}
 	}
 }
