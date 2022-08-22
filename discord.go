@@ -131,8 +131,7 @@ func mainCommand(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	// Thread that generates the image.
 	go func() {
 		guildInt, _ := strconv.Atoi(i.GuildID)
-		guildName := s.State.Guilds[guildInt].Name
-		fmt.Printf("Command executed in %v",guildName)
+		fmt.Printf("Command executed in %v",guildInt)
 
 		options := i.ApplicationCommandData().Options
 		optionMap := make(map[string]*discordgo.ApplicationCommandInteractionDataOption, len(options))
