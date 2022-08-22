@@ -4,7 +4,6 @@ import (
 	"image"
 	"image/color"
 	"math"
-	"sync"
 
 	//"math/rand"
 	"time"
@@ -19,7 +18,7 @@ var depth = 256.0
 
 func init() {
 	FunctionPool.Add("wave", func(width, height float64) (image.Image, error) {
-		return NewNoiseLegacy(0.125, 0.125, 8, 2, false, width, height)
+		return NewNoiseLegacy(0.125, 0.125, 8, 2, width, height)
 	})
 	types := map[string]fastnoiselite.NoiseType{
 		"perlin": fastnoiselite.NoiseTypePerlin,
@@ -57,9 +56,6 @@ func NewNoise(noiseType fastnoiselite.NoiseType, fractalType fastnoiselite.Fract
 	noise.Frequency = frequency
 	noise.SetFractalOctaves(octaves)
 
-	var wg sync.WaitGroup
-	wg.Add(int(width * height))
-
 	img := image.NewNRGBA(image.Rect(0, 0, int(width), int(height)))
 
 	// Create a gradient to use for the colors
@@ -72,45 +68,57 @@ func NewNoise(noiseType fastnoiselite.NoiseType, fractalType fastnoiselite.Fract
 	for y := float64(0); y < height; y++ {
 		// and each row
 		for x := float64(0); x < width; x++ {
-			// branch off into another thread
-			go func(x, y float64) {
-				// generate the noise value.
-				value := math.Abs(noise.GetNoise2D(fastnoiselite.FNLfloat(x), fastnoiselite.FNLfloat(y)))
-				var theColor color.NRGBA
-				if hasColor {
-					theColor_ := colors.At(value)
-					theColor = color.NRGBA{
-						R: uint8(theColor_.R * 255),
-						G: uint8(theColor_.G * 255),
-						B: uint8(theColor_.B * 255),
-						A: 255,
-					}
-				} else {
-					theColor = color.NRGBA{uint8(value*255), uint8(value*255), uint8(value*255), 255}
+			x_, y_ := fastnoiselite.FNLfloat(x), fastnoiselite.FNLfloat(y)
+			var value float64
+			noise.TransformNoiseCoordinate2D(&x_, &y_)
+			switch fractalType {
+				case fastnoiselite.FractalTypeFBm:
+					value = noise.GenFractalFBm2D(x_, y_)
+				case fastnoiselite.FractalTypeRidged:
+					value = noise.GenFractalRidged2D(x_, y_)
+				case fastnoiselite.FractalTypePingPong:
+					value = noise.GenFractalPingPong2D(x_, y_)
+				default:
+					value = noise.GenNoiseSingle2D(noise.Seed, x_, y_)
+			}
+
+			value = math.Abs(value)
+			var theColor color.NRGBA
+			if hasColor {
+				theColor_ := colors.At(value)
+				theColor = color.NRGBA{
+					R: uint8(theColor_.R * 255),
+					G: uint8(theColor_.G * 255),
+					B: uint8(theColor_.B * 255),
+					A: 255,
 				}
-				// Set the corresponding pixel
-				img.Set(int(x), int(y), theColor)
-				wg.Done()
-			}(x, y)
+			} else {
+				theColor = color.NRGBA{uint8(value*255), uint8(value*255), uint8(value*255), 255}
+			}
+
+			// golang function calls are too slow for us so  we'll just copy and paste the code for img.Set
+			// here.
+
+			if !(image.Point{int(x), int(y)}.In(img.Rect)) {
+				continue
+			}
+			i := img.PixOffset(int(x), int(y))
+			c1 := color.NRGBAModel.Convert(theColor).(color.NRGBA)
+			s := img.Pix[i : i+4 : i+4] // Small cap improves performance, see https://golang.org/issue/27857
+			s[0] = c1.R
+			s[1] = c1.G
+			s[2] = c1.B
+			s[3] = 255
+
 		}
 	}
 
-	wg.Wait()
 	return img, nil
 }
 
-func NewNoiseLegacy(density, detail float64, divide, mul float64, hasColor bool, width, height float64) (image.Image, error) {
+func NewNoiseLegacy(density, detail float64, divide, mul float64, width, height float64) (image.Image, error) {
 	// Create a noise image
 	noise := perlin.NewPerlin(density, detail, 50, time.Now().Unix())
-
-	var wg sync.WaitGroup
-	wg.Add(int(width * height))
-
-	// Create a gradient to use for the colors
-	colors, err := NewGradient()
-	if err != nil {
-		return nil, err
-	}
 
 	img := image.NewNRGBA(image.Rect(0, 0, int(width), int(height)))
 
@@ -118,30 +126,13 @@ func NewNoiseLegacy(density, detail float64, divide, mul float64, hasColor bool,
 	for y := float64(0); y < height; y++ {
 		// and each row
 		for x := float64(0); x < width; x++ {
-			// branch off into another thread
-			go func(x, y float64) {
-				// generate the noise value.
-				value := math.Abs(noise.Noise2D(x, y)) / divide
-				var theColor color.NRGBA
-				if hasColor {
-					theColor_ := colors.At(value)
-					theColor = color.NRGBA{
-						R: uint8(theColor_.R * mul),
-						G: uint8(theColor_.G * mul),
-						B: uint8(theColor_.B * mul),
-						A: 255,
-					}
-				} else {
-					theColor = color.NRGBA{uint8(value), uint8(value), uint8(value), 255}
-				}
-				// Set the corresponding pixel
-				img.Set(int(x), int(y), theColor)
-				wg.Done()
-			}(x, y)
+			// generate the noise value.
+			value := math.Abs(noise.Noise2D(x, y)) / divide
+			theColor := color.NRGBA{uint8(value), uint8(value), uint8(value), 255}
+			// Set the corresponding pixel
+			img.Set(int(x), int(y), theColor)
 		}
 	}
-
-	wg.Wait()
 	return img, nil
 }
 

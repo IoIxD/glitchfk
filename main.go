@@ -162,12 +162,18 @@ func DefaultImage(forceLowContrast bool, width, height float64) ([]byte, error) 
 		var err1, err2 error
 		wg.Add(2)
 		go func() {
+			start := time.Now().UnixMilli()
 			grad1, err1 = modules.FunctionPool.Random()(width,height)
+			end := time.Now().UnixMilli()
+			fmt.Printf("%vms\n",end-start)
 			wg.Done()
 		}()
 
 		go func() {
+			start := time.Now().UnixMilli()
 			grad2, err2 = modules.FunctionPool.Random()(width,height)
+			end := time.Now().UnixMilli()
+			fmt.Printf("%vms\n",end-start)
 			wg.Done()
 		}()
 
@@ -230,9 +236,17 @@ var lastTypeGiven int
 func NewImage(imageType string, width, height float64) (image.Image, error) {
 	imageFunc := modules.FunctionPool.Get(imageType)
 	if(imageFunc == nil) {
-		return nil, fmt.Errorf("Invalid type %v.\n",imageType)
+		// it might just be that the module isn't loaded yet. wait 150ms
+		time.Sleep(time.Millisecond * 150)
+		imageFunc = modules.FunctionPool.Get(imageType)
+		if(imageFunc == nil) {
+			return nil, fmt.Errorf("Invalid type %v.\n",imageType)
+		}
 	}
+	start := time.Now().UnixMilli()
 	image, err := imageFunc(width,height)
+	end := time.Now().UnixMilli()
+	fmt.Printf("%vms for %v\n",end-start,imageType)
 	return image, err
 }
 

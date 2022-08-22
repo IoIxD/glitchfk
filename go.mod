@@ -7,7 +7,6 @@ require (
 	github.com/bwmarrin/discordgo v0.26.0
 	github.com/drswork/go-twitter v0.0.0-20220710160938-983ef38dcd50
 	github.com/furui/fastnoiselite-go v0.0.0-20220802181908-5f37e99ef939
-	github.com/lucasb-eyer/go-colorful v1.2.0
 	github.com/mazznoer/colorgrad v0.9.0
 	github.com/pelletier/go-toml/v2 v2.0.2
 )
@@ -15,6 +14,7 @@ require (
 require (
 	github.com/google/go-cmp v0.5.8 // indirect
 	github.com/gorilla/websocket v1.4.2 // indirect
+	github.com/lucasb-eyer/go-colorful v1.2.0 // indirect
 	golang.org/x/crypto v0.0.0-20210421170649-83a5a9bb288b // indirect
 	golang.org/x/sys v0.0.0-20201119102817-f84b799fce68 // indirect
 )
