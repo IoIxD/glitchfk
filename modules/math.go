@@ -18,40 +18,11 @@ const (
 	PI4C = 2.69515142907905952645e-15 // 0x3ce8469898cc5170,
 )
 
-var mPi4 = [...]uint64{
-	0x0000000000000001,
-	0x45f306dc9c882a53,
-	0xf84eafa3ea69bb81,
-	0xb6c52b3278872083,
-	0xfca2c757bd778ac3,
-	0x6e48dc74849ba5c0,
-	0x0c925dd413a32439,
-	0xfc3bd63962534e7d,
-	0xd1046bea5d768909,
-	0xd338e04d68befc82,
-	0x7323ac7306a673e9,
-	0x3908bf177bf25076,
-	0x3ff12fffbc0b301f,
-	0xde5e2316b414da3e,
-	0xda6cfd9e4f96136e,
-	0x9e8c7ecd3cbfd45a,
-	0xea4f758fd7cbe2f6,
-	0x7a0e73ef14a525d4,
-	0xd7f6bf623f1aba10,
-	0xac06608df8f6d757,
-}
-
 // other constants
 const (
-	uvnan    = 0x7FF8000000000001
-	uvinf    = 0x7FF0000000000000
-	uvneginf = 0xFFF0000000000000
-	uvone    = 0x3FF0000000000000
 	mask     = 0x7FF
 	shift    = 64 - 11 - 1
 	bias     = 1023
-	signMask = 1 << 63
-	fracMask = 1<<shift - 1
 )
 
 const PI4 = Pi / 4
@@ -244,6 +215,29 @@ func Len64(x uint64) (n int) {
 		n += 8
 	}
 	return n + int(len8tab[x])
+}
+
+var mPi4 = [...]uint64{
+	0x0000000000000001,
+	0x45f306dc9c882a53,
+	0xf84eafa3ea69bb81,
+	0xb6c52b3278872083,
+	0xfca2c757bd778ac3,
+	0x6e48dc74849ba5c0,
+	0x0c925dd413a32439,
+	0xfc3bd63962534e7d,
+	0xd1046bea5d768909,
+	0xd338e04d68befc82,
+	0x7323ac7306a673e9,
+	0x3908bf177bf25076,
+	0x3ff12fffbc0b301f,
+	0xde5e2316b414da3e,
+	0xda6cfd9e4f96136e,
+	0x9e8c7ecd3cbfd45a,
+	0xea4f758fd7cbe2f6,
+	0x7a0e73ef14a525d4,
+	0xd7f6bf623f1aba10,
+	0xac06608df8f6d757,
 }
 
 func trigReduce(x float64) (j uint64, z float64) {
