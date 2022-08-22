@@ -77,7 +77,7 @@ func RefreshSlashCommandsThread() {
 	for {
 		select {
 			case <-ticker.C:
-				RefreshSlashCommands(false)
+				RefreshSlashCommands(true)
 		}
 	}
 }
