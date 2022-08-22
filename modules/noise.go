@@ -4,6 +4,7 @@ import (
 	"image"
 	"image/color"
 	"math"
+	"sync"
 
 	//"math/rand"
 	"time"
@@ -122,17 +123,26 @@ func NewNoiseLegacy(density, detail float64, divide, mul float64, width, height 
 
 	img := image.NewNRGBA(image.Rect(0, 0, int(width), int(height)))
 
+	var wg sync.WaitGroup
+
+	wg.Add(int(width*height))
+
 	// For each column in the image
 	for y := float64(0); y < height; y++ {
 		// and each row
 		for x := float64(0); x < width; x++ {
-			// generate the noise value.
-			value := math.Abs(noise.Noise2D(x, y)) / divide
-			theColor := color.NRGBA{uint8(value), uint8(value), uint8(value), 255}
-			// Set the corresponding pixel
-			img.Set(int(x), int(y), theColor)
+			go func(x, y float64) {
+				// generate the noise value.
+				value := math.Abs(noise.Noise2D(x, y)) / divide
+				theColor := color.NRGBA{uint8(value), uint8(value), uint8(value), 255}
+				// Set the corresponding pixel
+				img.Set(int(x), int(y), theColor)
+				wg.Done()
+			}(x,y)
+
 		}
 	}
+	wg.Wait()
 	return img, nil
 }
 
