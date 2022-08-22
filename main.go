@@ -101,11 +101,13 @@ func main() {
 		}
 	}
 
+	DiscordThread()
+	
 	if LocalConfig.InProduction {
 		fmt.Println("starting twitter thread.")
 		go TwitterThread()
 		fmt.Println("starting discord thread.")
-		DiscordThread()
+		
 	} else {
 		image, err := DefaultImage(true,*widthOpt,*heightOpt)
 		if(err != nil) {

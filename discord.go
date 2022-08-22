@@ -28,13 +28,15 @@ var command = discordgo.ApplicationCommand{
 		},
 		{
 			Name: 	"width",
-			Description: "Width of the image. Default is 640. Max is 1024.",
+			Description: "Width of the image. Default is 640.",
 			Type: discordgo.ApplicationCommandOptionInteger,
+			MaxValue: 1024,
 		},
 		{
 			Name: 	"height",
-			Description: "Height of the image. Default is 480. Max is 768.",
+			Description: "Height of the image. Default is 480.",
 			Type: discordgo.ApplicationCommandOptionInteger,
+			MaxValue: 768,
 		},
 	},
 }
@@ -143,29 +145,39 @@ func mainCommand(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		}
 		var width float64 = 640
 		if widthop, ok := optionMap["width"]; ok {
-			width_, ok := widthop.Value.(int)
-			if(ok) {
-				width = float64(width_)
-				if(width >= 1024) {
-					width = 1024
-				}
+			switch t := widthop.Value.(type) {
+				case int64:
+					width = float64(widthop.Value.(int64))
+				case uint64:
+					width = float64(widthop.Value.(uint64))
+				case float64:
+					width = float64(widthop.Value.(float64))
+				default: 
+					fmt.Println(t)
 			}
 		}
+
 		var height float64 = 480
 		if heightop, ok := optionMap["height"]; ok {
-			height_, ok := heightop.Value.(int)
-			if(ok) {
-				height = float64(height_)
-				if(height >= 768) {
-					height = 768
-				}
+			switch t := heightop.Value.(type) {
+				case int64:
+					height = float64(heightop.Value.(int64))
+				case uint64:
+					height = float64(heightop.Value.(uint64))
+				case float64:
+					height = float64(heightop.Value.(float64))
+				default: 
+					fmt.Println(t)
 			}
 		}
 		var image []byte
+		var content string
 		if types, ok := optionMap["types"]; ok {
 			image, err = ImageViaTypes(types.Value.(string),width,height)
+			content = "`"+types.Value.(string)+"`"
 		} else {
 			image, err = DefaultImage(forceLowContrast,width,height)
+			content = "­"
 		}
 
 		if(err != nil) {
@@ -180,7 +192,7 @@ func mainCommand(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 			Type: discordgo.InteractionResponseChannelMessageWithSource,
 			Data: &discordgo.InteractionResponseData{
-				Content: "­",
+				Content: content,
 				Files: []*discordgo.File{
 					{
 						ContentType: "image/png",
