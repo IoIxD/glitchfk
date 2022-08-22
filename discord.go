@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/bwmarrin/discordgo"
@@ -64,7 +65,7 @@ func DiscordThread() {
 
 	RemoveSlashCommands()
 
-	RefreshSlashCommands(true)
+	RefreshSlashCommands()
 	go RefreshSlashCommandsThread()
 
 	discord.Open()
@@ -77,7 +78,7 @@ func RefreshSlashCommandsThread() {
 	for {
 		select {
 			case <-ticker.C:
-				RefreshSlashCommands(true)
+				RefreshSlashCommands()
 		}
 	}
 }
@@ -101,14 +102,11 @@ func RemoveSlashCommands() {
 
 
 // Refresh the slash commands
-func RefreshSlashCommands(nameServers bool) {
+func RefreshSlashCommands() {
 	for _, v := range discord.State.Guilds {
 		_, err := discord.ApplicationCommandCreate(discord.State.User.ID, v.ID, &command)
 		if(err != nil) {
 			fmt.Println(err)
-		}
-		if(nameServers) {
-			fmt.Printf("initialized command in %v\n", v.Name)
 		}
 	}
 }
@@ -132,6 +130,10 @@ func mainCommand(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	}()
 	// Thread that generates the image.
 	go func() {
+		guildInt, _ := strconv.Atoi(i.GuildID)
+		guildName := s.State.Guilds[guildInt].Name
+		fmt.Printf("Command executed in %v",guildName)
+
 		options := i.ApplicationCommandData().Options
 		optionMap := make(map[string]*discordgo.ApplicationCommandInteractionDataOption, len(options))
 		for _, v := range options {
