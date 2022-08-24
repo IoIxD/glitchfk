@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/glitchfuck_exe.dir/src/main.cpp.o -o glitchfuck 

@@ -1,0 +1,3 @@
+/home/gavin/Projects/glitchfuck/CMakeFiles/glitchfuck.dir
+/home/gavin/Projects/glitchfuck/CMakeFiles/edit_cache.dir
+/home/gavin/Projects/glitchfuck/CMakeFiles/rebuild_cache.dir
