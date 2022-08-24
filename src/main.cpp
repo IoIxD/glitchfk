@@ -4,7 +4,6 @@
 #include <iostream>
 #include <ranges>
 #include <string>
-#include <vips/vips.h>
 #include <vips/vips8>
 
 #define VIPS_DEBUG
@@ -34,15 +33,12 @@ int main(int argc, const char *argv[]) {
   gradient finalgrad = grad1 ^ grad2;
 
   // write that xor'd gradient to an image file
-  size_t size;
-  auto image = vips_image_new_from_memory(finalgrad.array(), size, WIDTH, 1, 3,
-                                          VIPS_FORMAT_INT);
+  size_t size = finalgrad.capacity() * 9216;
+  int finalgradStretched = finalgrad.arrayWithHeight(HEIGHT);
+  auto image = VImage::new_from_memory(&finalgradStretched, size, WIDTH, HEIGHT,
+                                       3, VIPS_FORMAT_INT);
 
-  int err = vips_image_write_to_file(image, "test.png", NULL);
-
-  if (err != 0) {
-    printf("%s", vips_error_buffer());
-  }
+  image.write_to_file("test.png");
 
   vips_shutdown();
 

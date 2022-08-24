@@ -9,7 +9,7 @@ find_package(PkgConfig)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
-pkg_check_modules(VIPS REQUIRED vips)
+pkg_check_modules(VIPS REQUIRED vips-cpp)
 if (VIPS_FOUND)
     message (STATUS "VIPS_INCLUDE_DIRS=${VIPS_INCLUDE_DIRS}")
     message (STATUS "VIPS_LIBRARIES=${VIPS_LIBRARIES}")

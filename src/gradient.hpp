@@ -29,8 +29,8 @@ public:
     return newGrad;
   }
 
-  int *array();
-  int *arrayWithHeight(int HEIGHT);
+  int array();
+  int arrayWithHeight(int HEIGHT);
 
   void append(color col) { grad.push_back(col); }
   int capacity() { return grad.capacity(); }
