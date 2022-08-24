@@ -136,7 +136,7 @@ CMakeFiles/glitchfuck.dir/src/main.cpp.o: \
  /usr/include/c++/12.1.1/bits/basic_ios.tcc \
  /usr/include/c++/12.1.1/bits/ostream.tcc /usr/include/c++/12.1.1/istream \
  /usr/include/c++/12.1.1/bits/istream.tcc /usr/include/c++/12.1.1/ranges \
- /usr/include/vips/vips8 /usr/include/vips/version.h \
+ /usr/local/include/vips/vips8 /usr/local/include/vips/version.h \
  /usr/include/glib-2.0/glib-object.h \
  /usr/include/glib-2.0/gobject/gbinding.h /usr/include/glib-2.0/glib.h \
  /usr/include/glib-2.0/glib/galloca.h /usr/include/glib-2.0/glib/gtypes.h \
@@ -252,8 +252,8 @@ CMakeFiles/glitchfuck.dir/src/main.cpp.o: \
  /usr/include/glib-2.0/gobject/gvaluearray.h \
  /usr/include/glib-2.0/gobject/gvaluetypes.h \
  /usr/include/glib-2.0/gobject/gobject-autocleanups.h \
- /usr/include/vips/VError8.h /usr/include/c++/12.1.1/cstring \
- /usr/include/vips/vips.h /usr/include/glib-2.0/glib/gstdio.h \
+ /usr/local/include/vips/VError8.h /usr/include/c++/12.1.1/cstring \
+ /usr/local/include/vips/vips.h /usr/include/glib-2.0/glib/gstdio.h \
  /usr/include/glib-2.0/glib/gprintf.h /usr/include/sys/stat.h \
  /usr/include/bits/statx.h /usr/include/linux/stat.h \
  /usr/include/linux/types.h /usr/include/asm/types.h \
@@ -412,11 +412,12 @@ CMakeFiles/glitchfuck.dir/src/main.cpp.o: \
  /usr/include/glib-2.0/gio/gvfs.h /usr/include/glib-2.0/gio/gvolume.h \
  /usr/include/glib-2.0/gio/gzlibcompressor.h \
  /usr/include/glib-2.0/gio/gzlibdecompressor.h \
- /usr/include/glib-2.0/gio/gio-autocleanups.h /usr/include/vips/basic.h \
- /usr/include/vips/buf.h /usr/include/vips/dbuf.h \
- /usr/include/vips/util.h /usr/include/c++/12.1.1/math.h \
- /usr/include/c++/12.1.1/cmath /usr/include/math.h \
- /usr/include/bits/math-vector.h /usr/include/bits/libm-simd-decl-stubs.h \
+ /usr/include/glib-2.0/gio/gio-autocleanups.h \
+ /usr/local/include/vips/basic.h /usr/local/include/vips/buf.h \
+ /usr/local/include/vips/dbuf.h /usr/local/include/vips/util.h \
+ /usr/include/c++/12.1.1/math.h /usr/include/c++/12.1.1/cmath \
+ /usr/include/math.h /usr/include/bits/math-vector.h \
+ /usr/include/bits/libm-simd-decl-stubs.h \
  /usr/include/bits/flt-eval-method.h /usr/include/bits/fp-logb.h \
  /usr/include/bits/fp-fast.h \
  /usr/include/bits/mathcalls-helper-functions.h \
@@ -433,24 +434,26 @@ CMakeFiles/glitchfuck.dir/src/main.cpp.o: \
  /usr/include/c++/12.1.1/tr1/modified_bessel_func.tcc \
  /usr/include/c++/12.1.1/tr1/poly_hermite.tcc \
  /usr/include/c++/12.1.1/tr1/poly_laguerre.tcc \
- /usr/include/c++/12.1.1/tr1/riemann_zeta.tcc /usr/include/vips/object.h \
- /usr/include/vips/type.h /usr/include/vips/gate.h \
- /usr/include/vips/connection.h /usr/include/vips/sbuf.h \
- /usr/include/vips/rect.h /usr/include/vips/private.h \
- /usr/include/vips/mask.h /usr/include/vips/image.h \
- /usr/include/vips/region.h /usr/include/vips/memory.h \
- /usr/include/vips/error.h /usr/include/vips/format.h \
- /usr/include/vips/generate.h /usr/include/vips/interpolate.h \
- /usr/include/vips/semaphore.h /usr/include/vips/thread.h \
- /usr/include/vips/threadpool.h /usr/include/vips/header.h \
- /usr/include/vips/operation.h /usr/include/vips/foreign.h \
- /usr/include/vips/enumtypes.h /usr/include/vips/arithmetic.h \
- /usr/include/vips/conversion.h /usr/include/vips/convolution.h \
- /usr/include/vips/morphology.h /usr/include/vips/mosaicing.h \
- /usr/include/vips/histogram.h /usr/include/vips/freqfilt.h \
- /usr/include/vips/resample.h /usr/include/vips/colour.h \
- /usr/include/vips/draw.h /usr/include/vips/create.h \
- /usr/include/vips/video.h /usr/include/vips/VImage8.h \
+ /usr/include/c++/12.1.1/tr1/riemann_zeta.tcc \
+ /usr/local/include/vips/object.h /usr/local/include/vips/type.h \
+ /usr/local/include/vips/gate.h /usr/local/include/vips/connection.h \
+ /usr/local/include/vips/sbuf.h /usr/local/include/vips/rect.h \
+ /usr/local/include/vips/private.h /usr/local/include/vips/mask.h \
+ /usr/local/include/vips/image.h /usr/local/include/vips/region.h \
+ /usr/local/include/vips/memory.h /usr/local/include/vips/error.h \
+ /usr/local/include/vips/format.h /usr/local/include/vips/generate.h \
+ /usr/local/include/vips/interpolate.h \
+ /usr/local/include/vips/semaphore.h /usr/local/include/vips/thread.h \
+ /usr/local/include/vips/threadpool.h /usr/local/include/vips/header.h \
+ /usr/local/include/vips/operation.h /usr/local/include/vips/foreign.h \
+ /usr/local/include/vips/enumtypes.h /usr/local/include/vips/arithmetic.h \
+ /usr/local/include/vips/conversion.h \
+ /usr/local/include/vips/convolution.h \
+ /usr/local/include/vips/morphology.h /usr/local/include/vips/mosaicing.h \
+ /usr/local/include/vips/histogram.h /usr/local/include/vips/freqfilt.h \
+ /usr/local/include/vips/resample.h /usr/local/include/vips/colour.h \
+ /usr/local/include/vips/draw.h /usr/local/include/vips/create.h \
+ /usr/local/include/vips/video.h /usr/local/include/vips/VImage8.h \
  /usr/include/c++/12.1.1/list /usr/include/c++/12.1.1/bits/stl_list.h \
  /usr/include/c++/12.1.1/bits/allocated_ptr.h \
  /usr/include/c++/12.1.1/ext/aligned_buffer.h \
@@ -461,8 +464,9 @@ CMakeFiles/glitchfuck.dir/src/main.cpp.o: \
  /usr/include/c++/12.1.1/bits/stl_vector.h \
  /usr/include/c++/12.1.1/bits/stl_bvector.h \
  /usr/include/c++/12.1.1/bits/vector.tcc \
- /usr/include/vips/VInterpolate8.h /usr/include/vips/VRegion8.h \
- /usr/include/vips/VConnection8.h \
+ /usr/local/include/vips/VInterpolate8.h \
+ /usr/local/include/vips/VRegion8.h \
+ /usr/local/include/vips/VConnection8.h \
  /home/gavin/Projects/glitchfuck/src/gradient.hpp \
  /usr/include/c++/12.1.1/chrono /usr/include/c++/12.1.1/bits/chrono.h \
  /usr/include/c++/12.1.1/ratio /usr/include/c++/12.1.1/ctime \

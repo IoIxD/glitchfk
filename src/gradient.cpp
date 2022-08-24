@@ -1,17 +1,17 @@
 #include "gradient.hpp"
 #include "random.hpp"
-#include <cstdlib>
 #include <cstdio>
+#include <cstdlib>
 
 using std::printf;
 
-int* gradient::array(int width, int height) {
-  int *colors = (int*)malloc(width*height*12);
+int *gradient::array(int width, int height) {
+  int *colors = (int *)malloc(width * height * 12);
   for (int y = 0; y < height; y++) {
-    //printf("%d\n",y);
-    for (int x = 0; x < width; x+=3) {
-      //printf("%d\n",x);
-      int point = (y*x)+x;
+    // printf("%d\n",y);
+    for (int x = 0; x < width; x++) {
+      // printf("%d\n",x);
+      int point = y * width * 3 + x * 3;
       colors[point] = this->grad[x].R;
       colors[point + 1] = this->grad[x].G;
       colors[point + 2] = this->grad[x].B;
