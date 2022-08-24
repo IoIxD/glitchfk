@@ -33,9 +33,8 @@ int main(int argc, const char *argv[]) {
   gradient finalgrad = grad1 ^ grad2;
 
   // write that xor'd gradient to an image file
-  size_t size = finalgrad.capacity() * 9216;
-  int finalgradStretched = finalgrad.arrayWithHeight(HEIGHT);
-  auto image = VImage::new_from_memory(&finalgradStretched, size, WIDTH, HEIGHT,
+  size_t size = (WIDTH*HEIGHT)*12;
+  auto image = VImage::new_from_memory_steal(finalgrad.array(WIDTH,HEIGHT), size, WIDTH, HEIGHT,
                                        3, VIPS_FORMAT_INT);
 
   image.write_to_file("test.png");

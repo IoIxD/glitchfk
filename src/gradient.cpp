@@ -1,33 +1,23 @@
 #include "gradient.hpp"
 #include "random.hpp"
-#include <cstddef>
-#include <cstdint>
-#include <cstdio>
 #include <cstdlib>
+#include <cstdio>
 
 using std::printf;
 
-int gradient::array() {
-  int colors[(this->capacity() * 3)];
-  for (int i = 0; i < this->capacity(); i++) {
-    colors[i] = this->grad[i].R;
-    colors[i + 1] = this->grad[i].G;
-    colors[i + 2] = this->grad[i].B;
-  }
-  return colors[(this->capacity() * 3)];
-}
-
-int gradient::arrayWithHeight(int HEIGHT) {
-  int size = this->capacity();
-  int *colors = (int *)malloc((size * 6) * HEIGHT);
-  for (int n = 0; n < HEIGHT; n++) {
-    for (int i = 0; i < size; i++) {
-      colors[n * i] = (this->grad[i].R);
-      colors[n * i + 1] = (this->grad[i].G);
-      colors[n * i + 2] = (this->grad[i].B);
+int* gradient::array(int width, int height) {
+  int *colors = (int*)malloc(width*height*12);
+  for (int y = 0; y < height; y++) {
+    //printf("%d\n",y);
+    for (int x = 0; x < width; x+=3) {
+      //printf("%d\n",x);
+      int point = (y*x)+x;
+      colors[point] = this->grad[x].R;
+      colors[point + 1] = this->grad[x].G;
+      colors[point + 2] = this->grad[x].B;
     }
   }
-  return colors[(size * 3) * HEIGHT];
+  return colors;
 }
 
 gradient LinearGradient(color color1, color color2, int width) {
