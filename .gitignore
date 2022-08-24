@@ -7,3 +7,7 @@ cmake-build-*/
 prefix/
 CMakeLists.txt.user
 CMakeUserPresets.json
+config.toml
+glitchfuck
+test.*
+*.jpg
