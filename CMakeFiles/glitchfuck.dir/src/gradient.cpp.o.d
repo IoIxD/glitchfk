@@ -87,4 +87,31 @@ CMakeFiles/glitchfuck.dir/src/gradient.cpp.o: \
  /usr/include/bits/pthreadtypes-arch.h \
  /usr/include/bits/atomic_wide_counter.h /usr/include/bits/struct_mutex.h \
  /usr/include/bits/struct_rwlock.h /usr/include/alloca.h \
- /usr/include/bits/stdlib-float.h /usr/include/c++/12.1.1/bits/std_abs.h
+ /usr/include/bits/stdlib-float.h /usr/include/c++/12.1.1/bits/std_abs.h \
+ /usr/include/c++/12.1.1/stdexcept /usr/include/c++/12.1.1/exception \
+ /usr/include/c++/12.1.1/bits/exception_ptr.h \
+ /usr/include/c++/12.1.1/bits/cxxabi_init_exception.h \
+ /usr/include/c++/12.1.1/typeinfo \
+ /usr/include/c++/12.1.1/bits/nested_exception.h \
+ /usr/include/c++/12.1.1/string /usr/include/c++/12.1.1/bits/stringfwd.h \
+ /usr/include/c++/12.1.1/bits/char_traits.h \
+ /usr/include/c++/12.1.1/bits/postypes.h /usr/include/c++/12.1.1/cwchar \
+ /usr/include/wchar.h /usr/include/bits/types/wint_t.h \
+ /usr/include/bits/types/mbstate_t.h \
+ /usr/include/c++/12.1.1/bits/localefwd.h \
+ /usr/include/c++/12.1.1/x86_64-pc-linux-gnu/bits/c++locale.h \
+ /usr/include/c++/12.1.1/clocale /usr/include/locale.h \
+ /usr/include/bits/locale.h /usr/include/c++/12.1.1/iosfwd \
+ /usr/include/c++/12.1.1/cctype /usr/include/ctype.h \
+ /usr/include/c++/12.1.1/bits/ostream_insert.h \
+ /usr/include/c++/12.1.1/bits/cxxabi_forced.h \
+ /usr/include/c++/12.1.1/bits/basic_string.h \
+ /usr/include/c++/12.1.1/string_view \
+ /usr/include/c++/12.1.1/bits/string_view.tcc \
+ /usr/include/c++/12.1.1/ext/string_conversions.h \
+ /usr/include/c++/12.1.1/cerrno /usr/include/errno.h \
+ /usr/include/bits/errno.h /usr/include/linux/errno.h \
+ /usr/include/asm/errno.h /usr/include/asm-generic/errno.h \
+ /usr/include/asm-generic/errno-base.h /usr/include/bits/types/error_t.h \
+ /usr/include/c++/12.1.1/bits/charconv.h \
+ /usr/include/c++/12.1.1/bits/basic_string.tcc

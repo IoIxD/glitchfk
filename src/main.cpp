@@ -26,16 +26,16 @@ int main(int argc, const char *argv[]) {
   }
 
   // generate two gradients
-  gradient grad1 = RandomLinearGradient(WIDTH);
-  gradient grad2 = RandomLinearGradient(WIDTH);
+  gradient grad1 = RandomHorizontalGradient(WIDTH, HEIGHT);
+  gradient grad2 = RandomVerticalGradient(WIDTH, HEIGHT);
 
   // generate a xor'd gradient
-  gradient finalgrad = grad1 ^ grad2;
+  int *finalgrad = grad1 ^ grad2;
 
   // write that xor'd gradient to an image file
-  size_t size = (WIDTH*HEIGHT)*12;
-  auto image = VImage::new_from_memory_steal(finalgrad.array(WIDTH,HEIGHT), size, WIDTH, HEIGHT,
-                                       3, VIPS_FORMAT_INT);
+  size_t size = (WIDTH * HEIGHT) * 12;
+  auto image = VImage::new_from_memory_steal(grad1.array(), size, WIDTH, HEIGHT,
+                                             3, VIPS_FORMAT_INT);
 
   image.write_to_file("test.png");
 

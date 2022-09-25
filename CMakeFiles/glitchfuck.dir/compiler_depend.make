@@ -122,7 +122,45 @@ CMakeFiles/glitchfuck.dir/src/gradient.cpp.o: src/gradient.cpp \
   /usr/include/bits/struct_rwlock.h \
   /usr/include/alloca.h \
   /usr/include/bits/stdlib-float.h \
-  /usr/include/c++/12.1.1/bits/std_abs.h
+  /usr/include/c++/12.1.1/bits/std_abs.h \
+  /usr/include/c++/12.1.1/stdexcept \
+  /usr/include/c++/12.1.1/exception \
+  /usr/include/c++/12.1.1/bits/exception_ptr.h \
+  /usr/include/c++/12.1.1/bits/cxxabi_init_exception.h \
+  /usr/include/c++/12.1.1/typeinfo \
+  /usr/include/c++/12.1.1/bits/nested_exception.h \
+  /usr/include/c++/12.1.1/string \
+  /usr/include/c++/12.1.1/bits/stringfwd.h \
+  /usr/include/c++/12.1.1/bits/char_traits.h \
+  /usr/include/c++/12.1.1/bits/postypes.h \
+  /usr/include/c++/12.1.1/cwchar \
+  /usr/include/wchar.h \
+  /usr/include/bits/types/wint_t.h \
+  /usr/include/bits/types/mbstate_t.h \
+  /usr/include/c++/12.1.1/bits/localefwd.h \
+  /usr/include/c++/12.1.1/x86_64-pc-linux-gnu/bits/c++locale.h \
+  /usr/include/c++/12.1.1/clocale \
+  /usr/include/locale.h \
+  /usr/include/bits/locale.h \
+  /usr/include/c++/12.1.1/iosfwd \
+  /usr/include/c++/12.1.1/cctype \
+  /usr/include/ctype.h \
+  /usr/include/c++/12.1.1/bits/ostream_insert.h \
+  /usr/include/c++/12.1.1/bits/cxxabi_forced.h \
+  /usr/include/c++/12.1.1/bits/basic_string.h \
+  /usr/include/c++/12.1.1/string_view \
+  /usr/include/c++/12.1.1/bits/string_view.tcc \
+  /usr/include/c++/12.1.1/ext/string_conversions.h \
+  /usr/include/c++/12.1.1/cerrno \
+  /usr/include/errno.h \
+  /usr/include/bits/errno.h \
+  /usr/include/linux/errno.h \
+  /usr/include/asm/errno.h \
+  /usr/include/asm-generic/errno.h \
+  /usr/include/asm-generic/errno-base.h \
+  /usr/include/bits/types/error_t.h \
+  /usr/include/c++/12.1.1/bits/charconv.h \
+  /usr/include/c++/12.1.1/bits/basic_string.tcc
 
 CMakeFiles/glitchfuck.dir/src/main.cpp.o: src/main.cpp \
   /usr/include/stdc-predef.h \
@@ -316,7 +354,7 @@ CMakeFiles/glitchfuck.dir/src/main.cpp.o: src/main.cpp \
   /usr/include/c++/12.1.1/istream \
   /usr/include/c++/12.1.1/bits/istream.tcc \
   /usr/include/c++/12.1.1/ranges \
-  /usr/local/include/vips/vips8 \
+  /usr/include/vips/vips8 \
   /usr/local/include/vips/version.h \
   /usr/include/glib-2.0/glib-object.h \
   /usr/include/glib-2.0/gobject/gbinding.h \
@@ -471,7 +509,7 @@ CMakeFiles/glitchfuck.dir/src/main.cpp.o: src/main.cpp \
   /usr/include/glib-2.0/gobject/gvaluearray.h \
   /usr/include/glib-2.0/gobject/gvaluetypes.h \
   /usr/include/glib-2.0/gobject/gobject-autocleanups.h \
-  /usr/local/include/vips/VError8.h \
+  /usr/include/vips/VError8.h \
   /usr/include/c++/12.1.1/cstring \
   /usr/local/include/vips/vips.h \
   /usr/include/glib-2.0/glib/gstdio.h \
@@ -712,7 +750,7 @@ CMakeFiles/glitchfuck.dir/src/main.cpp.o: src/main.cpp \
   /usr/local/include/vips/draw.h \
   /usr/local/include/vips/create.h \
   /usr/local/include/vips/video.h \
-  /usr/local/include/vips/VImage8.h \
+  /usr/include/vips/VImage8.h \
   /usr/include/c++/12.1.1/list \
   /usr/include/c++/12.1.1/bits/stl_list.h \
   /usr/include/c++/12.1.1/bits/allocated_ptr.h \
@@ -726,9 +764,8 @@ CMakeFiles/glitchfuck.dir/src/main.cpp.o: src/main.cpp \
   /usr/include/c++/12.1.1/bits/stl_vector.h \
   /usr/include/c++/12.1.1/bits/stl_bvector.h \
   /usr/include/c++/12.1.1/bits/vector.tcc \
-  /usr/local/include/vips/VInterpolate8.h \
-  /usr/local/include/vips/VRegion8.h \
-  /usr/local/include/vips/VConnection8.h \
+  /usr/include/vips/VInterpolate8.h \
+  /usr/include/vips/VConnection8.h \
   src/gradient.hpp \
   /usr/include/c++/12.1.1/chrono \
   /usr/include/c++/12.1.1/bits/chrono.h \
@@ -794,11 +831,9 @@ CMakeFiles/glitchfuck.dir/src/save.cpp.o: src/save.cpp \
 
 src/save.cpp:
 
-/usr/local/include/vips/VConnection8.h:
+/usr/include/vips/VConnection8.h:
 
-/usr/local/include/vips/VRegion8.h:
-
-/usr/local/include/vips/VInterpolate8.h:
+/usr/include/vips/VInterpolate8.h:
 
 /usr/include/c++/12.1.1/bits/sstream.tcc:
 
@@ -862,8 +897,6 @@ src/save.cpp:
 
 /usr/include/bits/mathcalls.h:
 
-/usr/include/bits/mathcalls-helper-functions.h:
-
 /usr/include/bits/fp-fast.h:
 
 /usr/include/bits/iscanonical.h:
@@ -879,6 +912,8 @@ src/save.cpp:
 /usr/include/glib-2.0/gio/gtcpwrapperconnection.h:
 
 /usr/include/bits/types/sigevent_t.h:
+
+/usr/include/vips/VImage8.h:
 
 /usr/include/bits/types/sigval_t.h:
 
@@ -970,44 +1005,6 @@ src/random.cpp:
 
 /usr/include/c++/12.1.1/bits/stl_construct.h:
 
-/usr/include/strings.h:
-
-/usr/local/include/vips/vips8:
-
-/usr/include/glib-2.0/gio/gthemedicon.h:
-
-/usr/include/c++/12.1.1/bits/charconv.h:
-
-/usr/include/locale.h:
-
-/usr/include/glib-2.0/glib/gshell.h:
-
-/usr/include/glib-2.0/gobject/gvalue.h:
-
-/usr/include/bits/types/error_t.h:
-
-/usr/include/asm-generic/errno-base.h:
-
-/usr/include/linux/errno.h:
-
-/usr/local/include/vips/private.h:
-
-/usr/local/include/vips/VError8.h:
-
-/usr/include/glib-2.0/gobject/gsourceclosure.h:
-
-/usr/include/glib-2.0/glib/garray.h:
-
-/usr/include/linux/limits.h:
-
-/usr/include/errno.h:
-
-/usr/include/bits/getopt_posix.h:
-
-/usr/include/glib-2.0/gio/ginetaddress.h:
-
-/usr/include/glib-2.0/gio/gsimpleactiongroup.h:
-
 /usr/include/c++/12.1.1/sstream:
 
 /usr/include/c++/12.1.1/x86_64-pc-linux-gnu/bits/atomic_word.h:
@@ -1038,37 +1035,89 @@ src/random.cpp:
 
 /usr/include/glib-2.0/glib/gsequence.h:
 
-/usr/lib/glib-2.0/include/glibconfig.h:
-
-/usr/include/c++/12.1.1/ext/atomicity.h:
-
 /usr/include/c++/12.1.1/bits/ios_base.h:
 
 /usr/include/glib-2.0/gio/gsettings.h:
 
 /usr/include/c++/12.1.1/ctime:
 
+/usr/include/bits/pthreadtypes.h:
+
+/usr/include/vips/vips8:
+
+/usr/include/c++/12.1.1/cstdlib:
+
+/usr/include/c++/12.1.1/bits/locale_facets.tcc:
+
+/usr/include/bits/fcntl.h:
+
+/usr/include/strings.h:
+
+/usr/include/c++/12.1.1/bits/charconv.h:
+
+/usr/include/locale.h:
+
+/usr/include/glib-2.0/glib/gshell.h:
+
+/usr/include/glib-2.0/gobject/gvalue.h:
+
+/usr/include/bits/types/error_t.h:
+
+/usr/include/asm-generic/errno-base.h:
+
+/usr/include/linux/errno.h:
+
+/usr/local/include/vips/private.h:
+
+/usr/include/glib-2.0/gobject/gsourceclosure.h:
+
+/usr/include/glib-2.0/glib/garray.h:
+
+/usr/include/linux/limits.h:
+
+/usr/include/errno.h:
+
+/usr/include/bits/getopt_posix.h:
+
+/usr/include/c++/12.1.1/ext/atomicity.h:
+
+/usr/lib/glib-2.0/include/glibconfig.h:
+
+/usr/include/glib-2.0/gio/ginetaddress.h:
+
+/usr/include/glib-2.0/gio/gsimpleactiongroup.h:
+
+/usr/include/linux/falloc.h:
+
+/usr/include/c++/12.1.1/debug/debug.h:
+
+/usr/include/c++/12.1.1/type_traits:
+
+/usr/include/bits/unistd_ext.h:
+
+/usr/include/glib-2.0/gio/gsocketaddress.h:
+
 /usr/include/glib-2.0/glib/glib-typeof.h:
 
 /usr/include/bits/setjmp.h:
-
-/usr/include/c++/12.1.1/typeinfo:
 
 /usr/include/bits/types/sigset_t.h:
 
 src/random.hpp:
 
+/usr/include/c++/12.1.1/typeinfo:
+
 /usr/include/c++/12.1.1/clocale:
 
 /usr/include/c++/12.1.1/ext/numeric_traits.h:
 
-/usr/include/glib-2.0/gio/gnativesocketaddress.h:
+/usr/include/bits/fcntl-linux.h:
 
-/usr/include/bits/stdint-uintn.h:
+/usr/include/c++/12.1.1/list:
 
-/usr/include/endian.h:
+src/main.cpp:
 
-/usr/include/stdint.h:
+/usr/include/glib-2.0/glib/grcbox.h:
 
 /usr/include/wchar.h:
 
@@ -1078,21 +1127,7 @@ src/random.hpp:
 
 /usr/include/glib-2.0/gio/gtlsserverconnection.h:
 
-/usr/include/glib-2.0/gio/gsocketaddress.h:
-
-/usr/local/include/vips/VImage8.h:
-
-/usr/include/bits/pthreadtypes.h:
-
-/usr/include/c++/12.1.1/cstdlib:
-
-/usr/include/linux/falloc.h:
-
-/usr/include/c++/12.1.1/debug/debug.h:
-
-/usr/include/c++/12.1.1/type_traits:
-
-/usr/include/bits/unistd_ext.h:
+/usr/include/glib-2.0/gio/gnativesocketaddress.h:
 
 /usr/include/ctype.h:
 
@@ -1130,20 +1165,6 @@ src/random.hpp:
 
 /usr/include/bits/types/locale_t.h:
 
-/usr/include/c++/12.1.1/stdexcept:
-
-/usr/include/glib-2.0/gio/gdbusutils.h:
-
-/usr/include/glib-2.0/gio/gtlsinteraction.h:
-
-/usr/include/c++/12.1.1/bits/functional_hash.h:
-
-/usr/include/c++/12.1.1/list:
-
-src/main.cpp:
-
-/usr/include/bits/fcntl-linux.h:
-
 /usr/include/stdio.h:
 
 /usr/include/bits/wordsize.h:
@@ -1162,6 +1183,14 @@ src/main.cpp:
 
 /usr/include/bits/endian.h:
 
+/usr/include/c++/12.1.1/bits/functional_hash.h:
+
+/usr/include/c++/12.1.1/stdexcept:
+
+/usr/include/glib-2.0/gio/gdbusutils.h:
+
+/usr/include/glib-2.0/gio/gtlsinteraction.h:
+
 /usr/include/bits/types/time_t.h:
 
 /usr/include/glib-2.0/gio/gtlspassword.h:
@@ -1173,10 +1202,6 @@ src/main.cpp:
 /usr/include/glib-2.0/glib/deprecated/gallocator.h:
 
 /usr/include/glib-2.0/gio/gactiongroup.h:
-
-/usr/include/c++/12.1.1/exception:
-
-/usr/include/bits/types/struct_tm.h:
 
 /usr/include/bits/types/struct_timeval.h:
 
@@ -1248,6 +1273,8 @@ src/gradient.cpp:
 
 /usr/include/c++/12.1.1/x86_64-pc-linux-gnu/bits/c++allocator.h:
 
+/usr/include/bits/stdint-uintn.h:
+
 /usr/include/bits/types/struct___jmp_buf_tag.h:
 
 /usr/include/glib-2.0/glib/gerror.h:
@@ -1271,6 +1298,14 @@ src/gradient.hpp:
 /usr/include/glib-2.0/gio/gconverterinputstream.h:
 
 /usr/include/c++/12.1.1/ext/alloc_traits.h:
+
+/usr/include/endian.h:
+
+/usr/include/stdint.h:
+
+/usr/include/bits/types/struct_tm.h:
+
+/usr/include/c++/12.1.1/exception:
 
 /usr/include/c++/12.1.1/streambuf:
 
@@ -1326,6 +1361,16 @@ src/gradient.hpp:
 
 /usr/include/bits/types/struct_timespec.h:
 
+/usr/include/c++/12.1.1/bits/cxxabi_forced.h:
+
+/usr/include/fcntl.h:
+
+/usr/include/bits/pthreadtypes-arch.h:
+
+/usr/include/glib-2.0/gobject/gparam.h:
+
+/usr/include/gnu/stubs.h:
+
 /usr/include/glib-2.0/glib/gtrashstack.h:
 
 /usr/include/bits/uio_lim.h:
@@ -1377,8 +1422,6 @@ src/gradient.hpp:
 /usr/include/c++/12.1.1/bits/exception.h:
 
 /usr/include/glib-2.0/gio/gfileicon.h:
-
-/usr/include/glib-2.0/glib/grcbox.h:
 
 /usr/include/c++/12.1.1/bits/stl_uninitialized.h:
 
@@ -1432,10 +1475,6 @@ src/gradient.hpp:
 
 /usr/include/asm/bitsperlong.h:
 
-/usr/include/c++/12.1.1/bits/exception_ptr.h:
-
-/usr/include/bits/waitflags.h:
-
 /usr/include/c++/12.1.1/bits/basic_string.h:
 
 /usr/include/bits/timesize.h:
@@ -1482,19 +1521,9 @@ src/gradient.hpp:
 
 /usr/include/c++/12.1.1/bits/std_abs.h:
 
-/usr/include/bits/pthreadtypes-arch.h:
+/usr/include/bits/waitflags.h:
 
-/usr/include/glib-2.0/gobject/gparam.h:
-
-/usr/include/gnu/stubs.h:
-
-/usr/include/c++/12.1.1/bits/cxxabi_forced.h:
-
-/usr/include/fcntl.h:
-
-/usr/include/c++/12.1.1/bits/locale_facets.tcc:
-
-/usr/include/bits/fcntl.h:
+/usr/include/c++/12.1.1/bits/exception_ptr.h:
 
 /usr/include/bits/posix_opt.h:
 
@@ -1681,6 +1710,10 @@ src/gradient.hpp:
 /usr/include/c++/12.1.1/cwctype:
 
 /usr/include/glib-2.0/gobject/gtypeplugin.h:
+
+/usr/include/bits/mathcalls-helper-functions.h:
+
+/usr/include/vips/VError8.h:
 
 /usr/include/c++/12.1.1/cstring:
 
@@ -1993,6 +2026,8 @@ src/gradient.hpp:
 /usr/include/c++/12.1.1/math.h:
 
 /usr/include/glib-2.0/gio/gtcpconnection.h:
+
+/usr/include/glib-2.0/gio/gthemedicon.h:
 
 /usr/include/bits/types/struct_iovec.h:
 

@@ -6,9 +6,9 @@ using namespace std::chrono;
 
 typedef class color {
 public:
-  int R;
-  int G;
-  int B;
+  double R;
+  double G;
+  double B;
 } color;
 
 typedef class gradient {
@@ -16,26 +16,23 @@ private:
   vector<color> grad;
 
 public:
-  class gradient operator^(gradient grad2) const {
-    gradient newGrad;
-    for (int x = 0; x < grad.capacity(); x++) {
-      color newColor{
-          grad[x].R ^ grad2[x].R,
-          grad[x].G ^ grad2[x].G,
-          grad[x].B ^ grad2[x].B,
-      };
-      newGrad.grad.push_back(newColor);
-    };
-    return newGrad;
-  }
-
-  int* array(int width, int height);
+  unsigned int type;
+  unsigned int width;
+  unsigned int height;
 
   void append(color col) { grad.push_back(col); }
   int capacity() { return grad.capacity(); }
 
-  color operator[](int i) const { return grad[i]; };
+  int *operator^(gradient grad2);
+  color operator[](int i) const;
+
+  int *array();
+
+  gradient();
+
 } gradient;
 
-gradient LinearGradient(color color1, color color2, int width);
-gradient RandomLinearGradient(int width);
+gradient LinearGradient(color color1, color color2, double width);
+gradient RandomLinearGradient(int width, int height);
+gradient RandomHorizontalGradient(int width, int height);
+gradient RandomVerticalGradient(int width, int height);

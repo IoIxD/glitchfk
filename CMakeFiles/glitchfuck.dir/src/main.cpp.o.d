@@ -136,7 +136,7 @@ CMakeFiles/glitchfuck.dir/src/main.cpp.o: \
  /usr/include/c++/12.1.1/bits/basic_ios.tcc \
  /usr/include/c++/12.1.1/bits/ostream.tcc /usr/include/c++/12.1.1/istream \
  /usr/include/c++/12.1.1/bits/istream.tcc /usr/include/c++/12.1.1/ranges \
- /usr/local/include/vips/vips8 /usr/local/include/vips/version.h \
+ /usr/include/vips/vips8 /usr/local/include/vips/version.h \
  /usr/include/glib-2.0/glib-object.h \
  /usr/include/glib-2.0/gobject/gbinding.h /usr/include/glib-2.0/glib.h \
  /usr/include/glib-2.0/glib/galloca.h /usr/include/glib-2.0/glib/gtypes.h \
@@ -252,7 +252,7 @@ CMakeFiles/glitchfuck.dir/src/main.cpp.o: \
  /usr/include/glib-2.0/gobject/gvaluearray.h \
  /usr/include/glib-2.0/gobject/gvaluetypes.h \
  /usr/include/glib-2.0/gobject/gobject-autocleanups.h \
- /usr/local/include/vips/VError8.h /usr/include/c++/12.1.1/cstring \
+ /usr/include/vips/VError8.h /usr/include/c++/12.1.1/cstring \
  /usr/local/include/vips/vips.h /usr/include/glib-2.0/glib/gstdio.h \
  /usr/include/glib-2.0/glib/gprintf.h /usr/include/sys/stat.h \
  /usr/include/bits/statx.h /usr/include/linux/stat.h \
@@ -453,7 +453,7 @@ CMakeFiles/glitchfuck.dir/src/main.cpp.o: \
  /usr/local/include/vips/histogram.h /usr/local/include/vips/freqfilt.h \
  /usr/local/include/vips/resample.h /usr/local/include/vips/colour.h \
  /usr/local/include/vips/draw.h /usr/local/include/vips/create.h \
- /usr/local/include/vips/video.h /usr/local/include/vips/VImage8.h \
+ /usr/local/include/vips/video.h /usr/include/vips/VImage8.h \
  /usr/include/c++/12.1.1/list /usr/include/c++/12.1.1/bits/stl_list.h \
  /usr/include/c++/12.1.1/bits/allocated_ptr.h \
  /usr/include/c++/12.1.1/ext/aligned_buffer.h \
@@ -464,9 +464,7 @@ CMakeFiles/glitchfuck.dir/src/main.cpp.o: \
  /usr/include/c++/12.1.1/bits/stl_vector.h \
  /usr/include/c++/12.1.1/bits/stl_bvector.h \
  /usr/include/c++/12.1.1/bits/vector.tcc \
- /usr/local/include/vips/VInterpolate8.h \
- /usr/local/include/vips/VRegion8.h \
- /usr/local/include/vips/VConnection8.h \
+ /usr/include/vips/VInterpolate8.h /usr/include/vips/VConnection8.h \
  /home/gavin/Projects/glitchfuck/src/gradient.hpp \
  /usr/include/c++/12.1.1/chrono /usr/include/c++/12.1.1/bits/chrono.h \
  /usr/include/c++/12.1.1/ratio /usr/include/c++/12.1.1/ctime \
