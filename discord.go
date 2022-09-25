@@ -14,45 +14,44 @@ var discord *discordgo.Session
 var err error
 
 var command = discordgo.ApplicationCommand{
-	Name: 	"glitchfuck",
+	Name:        "glitchfuck",
 	Description: "Runs glitchfuck.",
 	Options: []*discordgo.ApplicationCommandOption{
 		{
-			Name: 	"types",
+			Name:        "types",
 			Description: "The types of images to generate, seperated by commas. Random image by default. No docs yet.",
-			Type: discordgo.ApplicationCommandOptionString,
+			Type:        discordgo.ApplicationCommandOptionString,
 		},
 		{
-			Name: 	"forcelowcontrast",
+			Name:        "forcelowcontrast",
 			Description: "Don't return image if average contrast is high. Used for Twitter bot. May cause bot to not respond.",
-			Type: discordgo.ApplicationCommandOptionBoolean,
+			Type:        discordgo.ApplicationCommandOptionBoolean,
 		},
 		{
-			Name: 	"width",
+			Name:        "width",
 			Description: "Width of the image. Default is 640.",
-			Type: discordgo.ApplicationCommandOptionInteger,
-			MaxValue: 1024,
+			Type:        discordgo.ApplicationCommandOptionInteger,
+			MaxValue:    1024,
 		},
 		{
-			Name: 	"height",
+			Name:        "height",
 			Description: "Height of the image. Default is 480.",
-			Type: discordgo.ApplicationCommandOptionInteger,
-			MaxValue: 768,
+			Type:        discordgo.ApplicationCommandOptionInteger,
+			MaxValue:    768,
 		},
 	},
 }
 
 var commandHandlers = map[string]func(s *discordgo.Session, i *discordgo.InteractionCreate){
-		"glitchfuck": mainCommand,
-	}
+	"glitchfuck": mainCommand,
+}
 
 func DiscordThread() {
 	discord, err = discordgo.New("Bot " + LocalConfig.DiscordAuthToken)
-	if(err != nil) {
+	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-
 
 	discord.AddHandler(func(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		if h, ok := commandHandlers[i.ApplicationCommandData().Name]; ok {
@@ -69,7 +68,7 @@ func DiscordThread() {
 	go RefreshSlashCommandsThread()
 
 	discord.Open()
-	for {}
+	select {}
 }
 
 // Thread for refreshing the slash commands every minute.
@@ -77,8 +76,8 @@ func RefreshSlashCommandsThread() {
 	ticker := time.NewTicker(3 * time.Second)
 	for {
 		select {
-			case <-ticker.C:
-				RefreshSlashCommands()
+		case <-ticker.C:
+			RefreshSlashCommands()
 		}
 	}
 }
@@ -93,32 +92,30 @@ func RemoveSlashCommands() {
 
 		for _, n := range registeredCommands {
 			err := discord.ApplicationCommandDelete(discord.State.User.ID, v.ID, n.ID)
-			if(err != nil) {
+			if err != nil {
 				fmt.Println(err)
 			}
 		}
 	}
 }
 
-
 // Refresh the slash commands
 func RefreshSlashCommands() {
 	for _, v := range discord.State.Guilds {
 		_, err := discord.ApplicationCommandCreate(discord.State.User.ID, v.ID, &command)
-		if(err != nil) {
+		if err != nil {
 			fmt.Println(err)
 		}
 	}
 }
 
-
-// The main command 
+// The main command
 func mainCommand(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	var sent bool
 	// Thread to check if the command has finished within the time discord allows.
 	go func() {
 		time.Sleep(time.Millisecond * 2800)
-		if(!sent) {
+		if !sent {
 			s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 				Type: discordgo.InteractionResponseChannelMessageWithSource,
 				Data: &discordgo.InteractionResponseData{
@@ -131,7 +128,7 @@ func mainCommand(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	// Thread that generates the image.
 	go func() {
 		guildInt, _ := strconv.Atoi(i.GuildID)
-		fmt.Printf("Command executed in %v",guildInt)
+		fmt.Printf("Command executed in %v", guildInt)
 
 		options := i.ApplicationCommandData().Options
 		optionMap := make(map[string]*discordgo.ApplicationCommandInteractionDataOption, len(options))
@@ -140,55 +137,55 @@ func mainCommand(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		}
 
 		// unmarshal options into go.
-		forceLowContrast := false 
+		forceLowContrast := false
 		if flc, ok := optionMap["forcelowcontrast"]; ok {
 			forceLowContrast_, ok := flc.Value.(bool)
-			if(ok) {
+			if ok {
 				forceLowContrast = forceLowContrast_
 			}
 		}
 		var width float64 = 640
 		if widthop, ok := optionMap["width"]; ok {
 			switch t := widthop.Value.(type) {
-				case int64:
-					width = float64(widthop.Value.(int64))
-				case uint64:
-					width = float64(widthop.Value.(uint64))
-				case float64:
-					width = float64(widthop.Value.(float64))
-				default: 
-					fmt.Println(t)
+			case int64:
+				width = float64(widthop.Value.(int64))
+			case uint64:
+				width = float64(widthop.Value.(uint64))
+			case float64:
+				width = float64(widthop.Value.(float64))
+			default:
+				fmt.Println(t)
 			}
 		}
 
 		var height float64 = 480
 		if heightop, ok := optionMap["height"]; ok {
 			switch t := heightop.Value.(type) {
-				case int64:
-					height = float64(heightop.Value.(int64))
-				case uint64:
-					height = float64(heightop.Value.(uint64))
-				case float64:
-					height = float64(heightop.Value.(float64))
-				default: 
-					fmt.Println(t)
+			case int64:
+				height = float64(heightop.Value.(int64))
+			case uint64:
+				height = float64(heightop.Value.(uint64))
+			case float64:
+				height = float64(heightop.Value.(float64))
+			default:
+				fmt.Println(t)
 			}
 		}
 		var image []byte
 		var content string
 		if types, ok := optionMap["types"]; ok {
-			image, err = ImageViaTypes(types.Value.(string),width,height)
-			content = "`"+types.Value.(string)+"`"
+			image, err = ImageViaTypes(types.Value.(string), width, height)
+			content = "`" + types.Value.(string) + "`"
 		} else {
-			image, err = DefaultImage(forceLowContrast,width,height)
+			image, err = DefaultImage(forceLowContrast, width, height)
 			content = "­"
 		}
 
-		if(err != nil) {
+		if err != nil {
 			s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 				Type: discordgo.InteractionResponseChannelMessageWithSource,
 				Data: &discordgo.InteractionResponseData{
-					Content: "Error! ```\n"+err.Error()+"\n```",
+					Content: "Error! ```\n" + err.Error() + "\n```",
 				},
 			})
 		}
