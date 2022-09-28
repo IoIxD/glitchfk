@@ -7,7 +7,7 @@ edition = "2021"
 
 [dependencies]
 rand = "0.8.5"
-colorgrad = "0.6.1"
+tiny-gradient = "0.1.0"
 image = "0.24.4"
 
 [[bin]]
