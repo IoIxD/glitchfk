@@ -2,6 +2,8 @@ use image::{ImageBuffer, RgbImage};
 use rand::Rng;
 use tiny_gradient::{gradient::Gradient, RGB};
 
+use crate::debug;
+
 const WIDTH: u32 = 640;
 const HEIGHT: u32 = 480;
 const SIZE: usize = (WIDTH*HEIGHT) as usize;
@@ -9,7 +11,7 @@ const BLACK_COLOR: RGB = RGB::new(0,0,0);
 
 // generate a gradient object
 fn new() -> Gradient {
-    print!("generating gradient ");
+    debug!("generating gradient ");
     let mut colors: [RGB<u8>; 2] = [BLACK_COLOR,BLACK_COLOR];
     for i in 0..=1 {
         let r: u8 = rand::thread_rng().gen_range(0..255);
@@ -19,7 +21,7 @@ fn new() -> Gradient {
         let color = RGB::new(r,g,b);
         colors[i] = color;
     }
-    print!("done\n");
+    debug!("done\n");
     Gradient::new(colors[0],colors[1],SIZE)
     
 }
@@ -43,7 +45,7 @@ pub fn new_image() -> RgbImage {
         for x in 0..WIDTH {
             let color = grad[(y*x) as usize];
 
-            print!("\r\t\t{:5}, {:5}:\t\t({:3}, {:3}, {:3})",
+            debug!("\r\t\t{:5}, {:5}:\t\t({:3}, {:3}, {:3})",
             x,y,
             color.r,
             color.g,
@@ -53,6 +55,6 @@ pub fn new_image() -> RgbImage {
         } 
     }
     
-    print!("\ndone\n");
+    debug!("\ndone\n");
     img
 }

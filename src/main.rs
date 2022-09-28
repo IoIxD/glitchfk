@@ -1,7 +1,8 @@
+#![feature(allow_internal_unstable)]
 #![feature(iter_next_chunk)]
 
-
 pub mod modules;
+pub mod debug;
 
 use modules::gradient;
 
