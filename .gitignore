@@ -4,3 +4,7 @@ config.toml
 *.sh
 *.prof
 glitchfuckTwitter
+
+# Added by cargo
+
+/target
