@@ -1,4 +1,4 @@
-use image::{ImageBuffer, RgbaImage};
+use image::{ImageBuffer, RgbImage};
 use rand::Rng;
 use tiny_gradient::{gradient::Gradient, RGB};
 
@@ -7,6 +7,7 @@ const HEIGHT: u32 = 480;
 const SIZE: usize = (WIDTH*HEIGHT) as usize;
 const BLACK_COLOR: RGB = RGB::new(0,0,0);
 
+// generate a gradient object
 fn new() -> Gradient {
     print!("generating gradient ");
     let mut colors: [RGB<u8>; 2] = [BLACK_COLOR,BLACK_COLOR];
@@ -23,18 +24,21 @@ fn new() -> Gradient {
     
 }
 
-pub fn new_image() -> RgbaImage {
-    let grad_ = new();
-    print!("unwrapping gradient into array ");
-    let grad: [RGB<u8>; SIZE] = grad_.into_iter()
-    .collect::<Vec<RGB>>()
-    .try_into()
-    .unwrap();
-    print!("done\n");
-
-
-    print!("bringing gradient to image\n");
+// generate an image from the gradient.
+pub fn new_image() -> RgbImage {
+    // we unravel the gradient into an array as soon as we get it,
+    // because working with them is faster. 
+    let grad: [RGB<u8>; SIZE] = new()
+                                .into_iter()
+                                .collect::<Vec<RGB>>()
+                                .try_into()
+                                .unwrap();
+                                
+    // create a blank image
     let mut img = ImageBuffer::new(WIDTH, HEIGHT);
+    
+    // for each y and each x
+    // (we can't just iterate over the gradient since again, that's too slow)
     for y in 0..HEIGHT{
         for x in 0..WIDTH {
             let color = grad[(y*x) as usize];
@@ -45,9 +49,10 @@ pub fn new_image() -> RgbaImage {
             color.g,
             color.b);
     
-            img.put_pixel(x, y, image::Rgba([color.r,color.g,color.b,255]))
+            img.put_pixel(x, y, image::Rgb([color.r,color.g,color.b]))
         } 
     }
+    
     print!("\ndone\n");
     img
 }
