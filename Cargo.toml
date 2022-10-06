@@ -6,12 +6,20 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-rand = "0.8.5"
-tiny-gradient = "0.1.0"
-image = "0.24.4"
-unroll = "0.1.5"
+# glitchfuck part
+rand = "0.8"
+tiny-gradient = "0.1"
+image = "0.24"
+unroll = "0.1"
+# twiter
 egg-mode = "0.16"
-crossbeam = "0.8"
+# discord
+serenity = { version = "0.11", default-features = false, features = ["client", "gateway", "rustls_backend", "model"] }
+# toml
+toml = "0.5"
+serde = "1.0"
+# threading
+tokio = { version = "1", features = ["full"] }
 
 [[bin]]
 name = "glitchfuck"

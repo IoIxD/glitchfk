@@ -1,5 +1,4 @@
 use image::{RgbImage, Rgb};
-use crate::modules::gradient::{WIDTH,HEIGHT};
 
 pub fn xor_images(img1: RgbImage, img2: RgbImage) -> RgbImage {
     // todo: unravel both images arrays because those are faster
@@ -8,7 +7,7 @@ pub fn xor_images(img1: RgbImage, img2: RgbImage) -> RgbImage {
     let mut img1_iter = img1.pixels().into_iter();
     let mut img2_iter = img2.pixels().into_iter();
 
-    RgbImage::from_fn(WIDTH, HEIGHT, |_, _| {
+    RgbImage::from_fn(img1.width(), img1.height(), |_, _| {
         let a = match img1_iter.next() {
             Some(a) => a,
             None => &Rgb([0,0,0]), 

@@ -8,9 +8,6 @@ use crate::debug;
 use unroll::unroll_for_loops;
 
 // constant values
-pub const WIDTH: u32 = 1024;
-pub const HEIGHT: u32 = 768;
-pub const SIZE: usize = ((WIDTH*HEIGHT)+1) as usize;
 pub const BLACK_COLOR: RGB = RGB::new(0,0,0);
 
 // gradient types
@@ -37,7 +34,7 @@ impl Distribution<GradientType> for Standard {
 
 // generate a gradient object
 #[unroll_for_loops]
-fn new() -> Gradient {
+fn new(width: u32, height: u32) -> Gradient {
     debug!("generating gradient ");
     let mut colors: [RGB<u8>; 2] = [BLACK_COLOR,BLACK_COLOR];
     for i in 0..=1 {
@@ -49,15 +46,16 @@ fn new() -> Gradient {
         colors[i] = color;
     }
     debug!("done\n");
-    Gradient::new(colors[0],colors[1],SIZE)
-    
+
+    Gradient::new(colors[0],colors[1],((width*height)+1) as usize)
 }
 
 // generate an image from the gradient.
-pub fn new_image(gradient_type: GradientType) -> RgbImage {
-    // we unravel the gradient into an array as soon as we get it,
+pub fn new_image(gradient_type: GradientType, width: u32, height: u32) -> RgbImage {
+
+    // we unravel the gradient into a vector as soon as we get it,
     // because working with those is faster. 
-    let grad: [RGB<u8>; SIZE] = new()
+    let grad: Vec<RGB> = new(width,height)
                                 .into_iter()
                                 .collect::<Vec<RGB>>()
                                 .try_into()
@@ -65,28 +63,28 @@ pub fn new_image(gradient_type: GradientType) -> RgbImage {
                                 
     debug!("{}",grad.len());
     // create a blank image
-    let mut img = ImageBuffer::new(WIDTH, HEIGHT);
+    let mut img = ImageBuffer::new(width, height);
     
     // for each y and each x
     // (we can't just iterate over the gradient since again, that's too slow)
     let mut color: RGB;
-    for y in 1..HEIGHT{
-        for x in 1..WIDTH {
+    for y in 1..height{
+        for x in 1..width {
             let position: u32;
             match gradient_type {
                 GradientType::Horizontal =>{
-                    position = x*HEIGHT;
+                    position = x*height;
                 }
                 GradientType::Vertical => {
-                    position = y*HEIGHT;
+                    position = y*height;
                 }
                 GradientType::Diagonal => {
                     if (y as f32) < (x as f32) 
-                        {position = (x-y)*HEIGHT}
+                        {position = (x-y)*height}
                     else {position = x};
                 }
                 GradientType::DiagonalBidirectional => {
-                    position = ((x as f32 -y as f32)*HEIGHT as f32).abs() 
+                    position = ((x as f32 -y as f32)*height as f32).abs() 
                         as u32;
                 }
                 GradientType::Radial =>{
@@ -112,5 +110,5 @@ pub fn new_image(gradient_type: GradientType) -> RgbImage {
 #[inline]
 // generate a random gradient from any of the times.
 pub fn random_gradient() -> RgbImage {
-    new_image(rand::random())
+    new_image(rand::random(), 800, 600)
 }

@@ -1,0 +1,10 @@
+TwitterConsumerKey=""
+TwitterConsumerSecret=""
+TwitterAccessToken=""
+TwitterAccessSecret=""
+TwitterInterval=""
+
+DiscordAuthToken=""
+DiscordID=""
+
+InProduction=false
