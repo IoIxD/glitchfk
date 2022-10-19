@@ -1,2 +1,1 @@
-pub mod twitter;
-pub mod discord;
+pub mod web;
