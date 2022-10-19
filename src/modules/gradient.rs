@@ -50,7 +50,6 @@ fn new(width: u32, height: u32) -> Gradient {
 
 // generate an image from the gradient.
 pub fn new_image(gradient_type: GradientType, width: u32, height: u32) -> RgbImage {
-
     // we unravel the gradient into a vector as soon as we get it,
     // because working with those is faster. 
     let grad: Vec<RGB> = new(width,height)
@@ -63,8 +62,7 @@ pub fn new_image(gradient_type: GradientType, width: u32, height: u32) -> RgbIma
     
     // for each y and each x
     // (we can't just iterate over the gradient since again, that's too slow)
-    for y in 1..height{
-        for x in 1..width {
+    for (x, y, pix) in img.enumerate_pixels_mut() {
             let position = match gradient_type {
                 GradientType::Horizontal => x*height,
                 GradientType::Vertical => y*height,
@@ -86,10 +84,8 @@ pub fn new_image(gradient_type: GradientType, width: u32, height: u32) -> RgbIma
             color.g,
             color.b);
     
-            img.put_pixel(x, y, image::Rgb([color.r,color.g,color.b]))
+            *pix = image::Rgb([color.r, color.g, color.b]);
         } 
-    }
-    
     debug!("\ndone\n");
     img
 }
