@@ -12,6 +12,7 @@ image = "0.24"
 # web
 hyper = { version = "0.14", features = ["full"]}
 png = "0.17"
+futures = "0.3"
 # threading
 tokio = { version = "1", features = ["full"] }
 

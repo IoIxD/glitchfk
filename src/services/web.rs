@@ -9,6 +9,8 @@ use std::task::{Context, Poll};
 use crate::modules::gradient;
 use crate::image;
 
+use futures::future::join_all;
+
 pub async fn web_thread() -> Result<&'static str, hyper::Error> {   
     let addr = SocketAddr::from(([127,0,0,1], 6969));
 
@@ -39,19 +41,17 @@ impl Service<Request<Body>> for Svc {
     fn call(&mut self, _req: Request<Body>) -> Self::Future {
         Box::pin(async { 
             // TODO: query values
-            let grad1 = 
-                tokio::spawn(async move {
-                    gradient::random_gradient()
-                });
-            let grad2 = 
-                tokio::spawn(async move {
-                    gradient::random_gradient()
-                });
-            
-            let final_grad = image::xor_images(
-                grad1.await.unwrap(), 
-                grad2.await.unwrap()
-            );
+            // credit it gots to samhza for the map code,
+            // resolved, and final_grad.
+            let count = 5;
+            let futs = (0..count).map(|_| {
+                tokio::spawn(async {gradient::random_gradient()})
+            });
+            let resolved = join_all(futs).await;
+            let final_grad = resolved
+                .into_iter()
+                .map(|r| r.unwrap())
+                .reduce(|a, b| image::xor_images(a, b)).unwrap();
 
             let mut pixels_raw: Vec<u8> = vec![0; 0];
             // TODO: can we make this a one liner?

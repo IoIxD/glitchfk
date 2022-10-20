@@ -1,17 +1,15 @@
 use std::{fmt::{self}, time::SystemTime};
-
-use image::{ImageBuffer, RgbImage};
+use image::{ImageBuffer, RgbImage, Rgb};
 use rand::{
     distributions::{Distribution, Standard},
     Rng,
 };
-use crate::tinier_gradient::gradient::Gradient;
-use crate::tinier_gradient::rgb::RGB;
-
 use crate::debug;
 
+type Gradient = Vec<Rgb<u8>>;
+
 // constant values
-pub const BLACK_COLOR: RGB = RGB::new(0,0,0);
+pub const BLACK_COLOR: Rgb<u8> = Rgb::<u8>([0,0,0]);
 
 // gradient types
 pub enum GradientType {
@@ -47,41 +45,45 @@ impl fmt::Display for GradientType {
     }
 }
 
+// linear gradient (code from samhza)
+fn new(from: Rgb<u8>, to: Rgb<u8>, n: usize) -> Vec<Rgb<u8>> {
+    let mut v: Vec<Rgb<u8>> = Vec::with_capacity(n);
+    for i in 0..n {
+        let i = i as f32;
+        let byeah = |step| {
+            from.0[step] + (((to.0[step] as f32 - from.0[step] as f32) * i) / n as f32) as u8
+        };
+        let r = byeah(0);
+        let g = byeah(1);
+        let b = byeah(2);
+        v.push(Rgb::<u8>([r,g,b]));
+    }
+    v
+}
+
 // generate a gradient object
-fn new(width: u32, height: u32) -> Gradient {
+fn new_random(width: u32, height: u32) -> Gradient {
     debug!("generating gradient ");
     let rand = || {
-        let r: u32 = rand::thread_rng().gen_range(0..255);
+        let r = rand::thread_rng().gen_range(0..255);
         let g = rand::thread_rng().gen_range(0..255);
         let b = rand::thread_rng().gen_range(0..255);
-
-        RGB::new(r,g,b)
+        Rgb::<u8>([r,g,b])
     };
 
-    Gradient::new(rand(),rand(),((width*height)+1) as usize)
+    new(rand(),rand(),((width*height)+1) as usize)
 }
 
 // generate an image from the gradient.
 pub fn new_image(gradient_type: GradientType, width: u32, height: u32) -> RgbImage {
     let now = SystemTime::now();
 
-    
-
-    // we unravel the gradient into a vector as soon as we get it,
-    // because working with those is faster. 
-    let grad: Vec<RGB> = new(width,height)
-                            .into_iter()
-                            .collect::<Vec<RGB>>();
+    let grad: Gradient = new_random(width,height);
                                 
-    // TODO: working with arrays is even faster.
-    // find out how to unwrap a vec into an array in a way that won't cost
-    // speed.
-    
     // create a blank image
     let mut img = ImageBuffer::new(width, height);
 
     // random offset
-
     let offset_w = rand::thread_rng().gen_range(0..width);
     let offset_h = rand::thread_rng().gen_range(0..height);
     let offset = match rand::thread_rng().gen_range(0..1) as u32 {
@@ -119,7 +121,7 @@ pub fn new_image(gradient_type: GradientType, width: u32, height: u32) -> RgbIma
                 color = grad[position as usize];
             }
 
-            let (r, g, b) = ((color.r / 5) as u8, (color.g / 5) as u8, (color.b / 5) as u8);
+            let (r, g, b) = (color.0[0], color.0[1], color.0[2]);
             debug!("\t\t{:5}:\t\t({:3}, {:3}, {:3})\n",
             position, r, g, b);
     
