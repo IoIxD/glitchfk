@@ -92,7 +92,7 @@ pub fn new_image(gradient_type: GradientType, width: u32, height: u32) -> RgbIma
     let mut warned = false;
 
     // for each y and each x
-    // (we can't just iterate over the gradient since again, that's too slow)
+    let mut color = BLACK_COLOR;
     for (x, y, pix) in img.enumerate_pixels_mut() {
             let position = match gradient_type {
                 GradientType::Horizontal => (x*height)+offset_h,
@@ -109,8 +109,6 @@ pub fn new_image(gradient_type: GradientType, width: u32, height: u32) -> RgbIma
                     ((x as f32 - y as f32) * height as f32).abs() as u32
                 }
             };
-            let mut color = BLACK_COLOR;
-
             if position > grad.len() as u32 {
                 if !warned {
                     println!("calculation for {} went out of bounds.",gradient_type);
