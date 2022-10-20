@@ -1,6 +1,7 @@
 use std::net::SocketAddr;
 use hyper::{Body, Request, Response, Server};
 use hyper::service::Service;
+use ::image::RgbImage;
 
 use std::future::Future;
 use std::pin::Pin;
@@ -35,25 +36,35 @@ impl Service<Request<Body>> for Svc {
         Poll::Ready(Ok(()))
     }
 
+    
     fn call(&mut self, _req: Request<Body>) -> Self::Future {
-        // TODO: query values
-        let grad1 = gradient::random_gradient();
-        let grad2 = gradient::random_gradient();
-        let final_grad = image::xor_images(grad1, grad2);
+        Box::pin(async { 
+            // TODO: query values
+            let grad1 = 
+                tokio::spawn(async move {
+                    gradient::random_gradient()
+                });
+            let grad2 = 
+                tokio::spawn(async move {
+                    gradient::random_gradient()
+                });
+            
+            let final_grad = image::xor_images(
+                grad1.await.unwrap(), 
+                grad2.await.unwrap()
+            );
 
-        let mut pixels_raw: Vec<u8> = vec![0; 0];
-        // TODO: can we make this a one liner?
-        for p in final_grad.pixels() {
-            pixels_raw.push(p.0[0]);
-            pixels_raw.push(p.0[1]);
-            pixels_raw.push(p.0[2]);
-        };
+            let mut pixels_raw: Vec<u8> = vec![0; 0];
+            // TODO: can we make this a one liner?
+            for p in final_grad.pixels() {
+                pixels_raw.push(p.0[0]);
+                pixels_raw.push(p.0[1]);
+                pixels_raw.push(p.0[2]);
+            };
 
-        let pixels = image::png_from_u8(pixels_raw);
-        let res = Ok(Response::builder().body(Body::from(pixels)).unwrap());
-        Box::pin(async { res })
-
-
+            let pixels = image::png_from_u8(pixels_raw);
+            Ok(Response::builder().body(Body::from(pixels)).unwrap())
+        })
     }
 }
 
