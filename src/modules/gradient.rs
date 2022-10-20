@@ -131,7 +131,6 @@ pub fn new_image(gradient_type: GradientType, width: u32, height: u32) -> RgbIma
     img
 }
 
-#[inline(always)]
 // generate a random gradient from any of the times.
 pub fn random_gradient() -> RgbImage {
     println!("");
