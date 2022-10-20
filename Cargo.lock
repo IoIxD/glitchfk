@@ -236,7 +236,6 @@ dependencies = [
  "image",
  "png",
  "rand",
- "tiny-gradient",
  "tokio",
 ]
 
@@ -402,12 +401,6 @@ name = "libc"
 version = "0.2.133"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c0f80d65747a3e43d1596c7c5492d95d5edddaabd45a7fcdb02b95f644164966"
-
-[[package]]
-name = "libm"
-version = "0.2.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "292a948cd991e376cf75541fe5b97a1081d713c618b4f1b9500f8844e49eb565"
 
 [[package]]
 name = "lock_api"
@@ -757,15 +750,6 @@ dependencies = [
  "flate2",
  "jpeg-decoder",
  "weezl",
-]
-
-[[package]]
-name = "tiny-gradient"
-version = "0.1.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8063c572fcc935676f1e01615f201f355a053e88525ec41c1b0c4884ce104847"
-dependencies = [
- "libm",
 ]
 
 [[package]]

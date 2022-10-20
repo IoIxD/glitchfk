@@ -5,7 +5,8 @@ use rand::{
     distributions::{Distribution, Standard},
     Rng,
 };
-use tiny_gradient::{gradient::Gradient, RGB};
+use crate::tinier_gradient::gradient::Gradient;
+use crate::tinier_gradient::rgb::RGB;
 
 use crate::debug;
 
@@ -50,7 +51,7 @@ impl fmt::Display for GradientType {
 fn new(width: u32, height: u32) -> Gradient {
     debug!("generating gradient ");
     let rand = || {
-        let r: u8 = rand::thread_rng().gen_range(0..255);
+        let r: u32 = rand::thread_rng().gen_range(0..255);
         let g = rand::thread_rng().gen_range(0..255);
         let b = rand::thread_rng().gen_range(0..255);
 
@@ -99,7 +100,7 @@ pub fn new_image(gradient_type: GradientType, width: u32, height: u32) -> RgbIma
                 GradientType::Vertical => (y*height)+offset_w,
                 GradientType::Radial => (y*x)+offset,
                 GradientType::Diagonal => {
-                    if ((y+offset_h) as f32) < ((x+offset_h) as f32) {
+                    if (y+offset_h) < (x+offset_h) {
                         ((x+offset_h)-(y+offset_h))*height
                     } else {
                         x
@@ -118,13 +119,11 @@ pub fn new_image(gradient_type: GradientType, width: u32, height: u32) -> RgbIma
                 color = grad[position as usize];
             }
 
+            let (r, g, b) = ((color.r / 5) as u8, (color.g / 5) as u8, (color.b / 5) as u8);
             debug!("\t\t{:5}:\t\t({:3}, {:3}, {:3})\n",
-            position,
-            color.r,
-            color.g,
-            color.b);
+            position, r, g, b);
     
-            *pix = image::Rgb([color.r, color.g, color.b]);
+            *pix = image::Rgb([r, g, b]);
         } 
     debug!("\ndone\n");
     println!("{}ms",now.elapsed().unwrap().as_millis());

@@ -7,7 +7,7 @@
 // CURRENTLY THIS IS UNUSED but i'm keeping it here because if i can find out how to
 // hack a vec into an array in a timely manner then a big speed boost can be had.
 
-use tiny_gradient::{RGB};
+use crate::tinier_gradient::rgb::RGB;
 
 #[derive(Clone)]
 #[derive(Debug)]
