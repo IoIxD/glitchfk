@@ -1,7 +1,6 @@
 use std::net::SocketAddr;
 use hyper::{Body, Request, Response, Server};
 use hyper::service::Service;
-use ::image::RgbImage;
 
 use std::future::Future;
 use std::pin::Pin;

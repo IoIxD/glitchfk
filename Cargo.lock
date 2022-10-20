@@ -238,7 +238,6 @@ dependencies = [
  "rand",
  "tiny-gradient",
  "tokio",
- "unroll",
 ]
 
 [[package]]
@@ -851,16 +850,6 @@ name = "unicode-ident"
 version = "1.0.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "dcc811dc4066ac62f84f11307873c4850cb653bfa9b1719cee2bd2204a4bc5dd"
-
-[[package]]
-name = "unroll"
-version = "0.1.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5ad948c1cb799b1a70f836077721a92a35ac177d4daddf4c20a633786d4cf618"
-dependencies = [
- "quote",
- "syn",
-]
 
 [[package]]
 name = "want"

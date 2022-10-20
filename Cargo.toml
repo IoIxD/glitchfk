@@ -10,7 +10,6 @@ edition = "2021"
 rand = "0.8"
 tiny-gradient = "0.1"
 image = "0.24"
-unroll = "0.1"
 # web
 hyper = { version = "0.14", features = ["full"]}
 png = "0.17"

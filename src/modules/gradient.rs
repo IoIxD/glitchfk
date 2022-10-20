@@ -6,7 +6,6 @@ use rand::{
     Rng,
 };
 use tiny_gradient::{gradient::Gradient, RGB};
-use unroll::unroll_for_loops;
 
 use crate::debug;
 
@@ -48,7 +47,6 @@ impl fmt::Display for GradientType {
 }
 
 // generate a gradient object
-#[unroll_for_loops]
 fn new(width: u32, height: u32) -> Gradient {
     debug!("generating gradient ");
     let rand = || {
@@ -135,7 +133,7 @@ pub fn new_image(gradient_type: GradientType, width: u32, height: u32) -> RgbIma
     img
 }
 
-#[inline]
+#[inline(always)]
 // generate a random gradient from any of the times.
 pub fn random_gradient() -> RgbImage {
     println!("");
