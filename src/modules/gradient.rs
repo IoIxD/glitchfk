@@ -1,4 +1,4 @@
-use std::fmt;
+use std::{fmt::{self}, time::SystemTime};
 
 use image::{ImageBuffer, RgbImage};
 use rand::{
@@ -6,8 +6,9 @@ use rand::{
     Rng,
 };
 use tiny_gradient::{gradient::Gradient, RGB};
-use crate::debug;
 use unroll::unroll_for_loops;
+
+use crate::debug;
 
 // constant values
 pub const BLACK_COLOR: RGB = RGB::new(0,0,0);
@@ -57,20 +58,26 @@ fn new(width: u32, height: u32) -> Gradient {
 
         RGB::new(r,g,b)
     };
-    debug!("done\n");
 
     Gradient::new(rand(),rand(),((width*height)+1) as usize)
 }
 
 // generate an image from the gradient.
 pub fn new_image(gradient_type: GradientType, width: u32, height: u32) -> RgbImage {
+    let now = SystemTime::now();
+
+    
+
     // we unravel the gradient into a vector as soon as we get it,
     // because working with those is faster. 
     let grad: Vec<RGB> = new(width,height)
-                                .into_iter()
-                                .collect::<Vec<RGB>>();
+                            .into_iter()
+                            .collect::<Vec<RGB>>();
                                 
-    debug!("{}",grad.len());
+    // TODO: working with arrays is even faster.
+    // find out how to unwrap a vec into an array in a way that won't cost
+    // speed.
+    
     // create a blank image
     let mut img = ImageBuffer::new(width, height);
 
@@ -104,7 +111,8 @@ pub fn new_image(gradient_type: GradientType, width: u32, height: u32) -> RgbIma
                     ((x as f32 - y as f32) * height as f32).abs() as u32
                 }
             };
-            let mut color = grad[0];
+            let mut color = BLACK_COLOR;
+
             if position > grad.len() as u32 {
                 if !warned {
                     println!("calculation for {} went out of bounds.",gradient_type);
@@ -123,6 +131,7 @@ pub fn new_image(gradient_type: GradientType, width: u32, height: u32) -> RgbIma
             *pix = image::Rgb([color.r, color.g, color.b]);
         } 
     debug!("\ndone\n");
+    println!("{}ms",now.elapsed().unwrap().as_millis());
     img
 }
 

@@ -6,6 +6,7 @@ pub mod modules;
 pub mod debug;
 pub mod image;
 pub mod services;
+pub mod array_vec_generics;
 
 //use modules::gradient;
 use services::{web};
