@@ -34,12 +34,23 @@ pub mod wasm {
         fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
             let size = ctx.input().screen_rect().size();
             let (width, _height) = (size.x, size.y);
+
+            egui::TopBottomPanel::top("topbar")
+                            .resizable(false)
+            .show(ctx, |ui| {
+                ui.horizontal(|ui| {
+                    ui.label("File");
+                    ui.label("Help");
+                });
+            });
+
             egui::SidePanel::left("desktop")
                             .resizable(false)
                             .width_range(width/1.5..=width/1.5)
             .show(ctx, |ui| {
                 ui.heading("To be the desktop");
             });
+            
             egui::SidePanel::right("preview")
                             .resizable(false)
                             .width_range(width/0.5..=width/0.5)
