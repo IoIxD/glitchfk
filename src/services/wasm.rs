@@ -28,6 +28,25 @@ pub mod wasm {
 
             Default::default()
         }
+
+        pub fn desktop_menu(ui: &mut egui::Ui) {
+            if ui.horizontal(|ui| {
+                ui.label("Add");
+                ui.menu_button("", Self::items_menu);
+            }).response.clicked() {
+                Self::items_menu(ui);
+            };
+        }
+
+        pub fn items_menu(ui: &mut egui::Ui) {
+            ui.vertical(|ui| {
+                ui.button("Horizontal (todo)");
+                ui.button("Vertical (todo)");
+                ui.button("Diagonal (todo)");
+                ui.button("Radial (todo)");
+                ui.button("Inverse Radial (todo)");
+            });
+        }
     }
 
     impl App for MyApp {
@@ -35,27 +54,35 @@ pub mod wasm {
             let size = ctx.input().screen_rect().size();
             let (width, _height) = (size.x, size.y);
 
+            // top menu bar
             egui::TopBottomPanel::top("topbar")
                             .resizable(false)
             .show(ctx, |ui| {
                 ui.horizontal(|ui| {
                     ui.label("File");
                     ui.label("Help");
+                    egui::widgets::global_dark_light_mode_switch(ui);
                 });
             });
 
+            // left options area
             egui::SidePanel::left("desktop")
                             .resizable(false)
                             .width_range(width/1.5..=width/1.5)
             .show(ctx, |ui| {
-                ui.heading("To be the desktop");
-            });
+                ui.horizontal(|ui| {
+                    ui.label("Operator Page");
+                });
+            }).response.context_menu(Self::desktop_menu);
             
+            // right preview window
             egui::SidePanel::right("preview")
                             .resizable(false)
                             .width_range(width/0.5..=width/0.5)
             .show(ctx, |ui| {
-                ui.heading("To be the preview");
+                ui.horizontal(|ui| {
+                    ui.label("Preview");
+                });
             });
         }
     }
