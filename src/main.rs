@@ -7,12 +7,24 @@ pub mod debug;
 pub mod image;
 pub mod services;
 
-//use modules::gradient;
-use services::{web};
+// Compiling for server or anything else.
+#[cfg(not(target_arch = "wasm32"))]
+use services::server::server;
 
+#[cfg(not(target_arch = "wasm32"))]
 #[tokio::main]
 async fn main() {
+    
     tokio::select! {
-        done = web::web_thread() => println!("{}",done.unwrap()),
+        done = server::web_thread() => println!("{}",done.unwrap()),
     };
+}
+
+// Compiling for WASM.
+#[cfg(all(target_arch = "wasm32", target_os = "unknown"))]
+use services::wasm::wasm;
+
+#[cfg(all(target_arch = "wasm32", target_os = "unknown"))]
+fn main() {
+    wasm::main();
 }

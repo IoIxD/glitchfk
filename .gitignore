@@ -8,3 +8,4 @@ glitchfuckTwitter
 # Added by cargo
 
 /target
+/dist
