@@ -1,10 +1,15 @@
-TwitterConsumerKey=
-TwitterConsumerSecret=
-TwitterAccessToken=
-TwitterAccessSecret=
-TwitterInterval=
+TwitterConsumerKey=""
+TwitterConsumerSecret=""
+TwitterAccessToken=""
+TwitterAccessSecret=""
+TwitterInterval=""
 
-DiscordAuthToken=
-DiscordID=
+DiscordAuthToken=""
+DiscordID=""
 
-InProduction=
+MastodonInstanceURL=""
+MastodonInterval=""
+MastodonEmail=""
+MastodonPassword=""
+
+InProduction=false

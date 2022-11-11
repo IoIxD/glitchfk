@@ -27,9 +27,16 @@ var LocalConfig struct {
 	TwitterOAuthToken     string
 	TwitterOAuthSecret    string
 	TwitterInterval       string
-	DiscordAuthToken 	  string
-	DiscordID			  string
-	InProduction   bool
+
+	MastodonInstanceURL string
+	MastodonInterval    string
+	MastodonEmail       string
+	MastodonPassword    string
+
+	DiscordAuthToken string
+	DiscordID        string
+
+	InProduction bool
 }
 
 var imageTypes = flag.String("types", "", "The types of images you want to generate and xor, seperated by commas.")
@@ -71,13 +78,13 @@ func main() {
 	// if image types were given, run the command through them.
 	if *imageTypes != "" {
 		image, err := ImageViaTypes(*imageTypes, *widthOpt, *heightOpt)
-		if(err != nil) {
+		if err != nil {
 			fmt.Println(err)
 			return
 		}
 		f, _ := os.Create(*outputFile)
 		_, err = f.Write(image)
-		if(err != nil) {
+		if err != nil {
 			fmt.Println(err)
 		}
 		return
@@ -102,13 +109,22 @@ func main() {
 	}
 
 	if LocalConfig.InProduction {
-		fmt.Println("starting twitter thread.")
-		go TwitterThread()
-		fmt.Println("starting discord thread.")
-		DiscordThread()
+		if LocalConfig.TwitterConsumerKey != "" {
+			fmt.Println("starting twitter thread.")
+			go TwitterThread()
+		}
+		if LocalConfig.DiscordID != "" {
+			fmt.Println("starting discord thread.")
+			go DiscordThread()
+		}
+		if LocalConfig.MastodonEmail != "" {
+			fmt.Println("starting mastodon thread.")
+			go MastodonThread()
+		}
+		select {}
 	} else {
-		image, err := DefaultImage(true,*widthOpt,*heightOpt)
-		if(err != nil) {
+		image, err := DefaultImage(true, *widthOpt, *heightOpt)
+		if err != nil {
 			fmt.Println(err)
 			return
 		}
@@ -125,7 +141,7 @@ func WaitFor(int time.Duration) <-chan time.Time {
 	return time.After(dur)
 }
 
-func ImageViaTypes(types_ string, width, height float64) ([]byte, error)  {
+func ImageViaTypes(types_ string, width, height float64) ([]byte, error) {
 	types := strings.Split(types_, ",")
 	var lastImage image.Image
 	var finalImage image.Image
@@ -156,40 +172,40 @@ func ImageViaTypes(types_ string, width, height float64) ([]byte, error)  {
 func DefaultImage(forceLowContrast bool, width, height float64) ([]byte, error) {
 	var approved bool
 	var finalgrad image.Image
-	for(!approved) {
+	for !approved {
 		var grad1, grad2 image.Image
 		var wg sync.WaitGroup
 		var err1, err2 error
 		wg.Add(2)
 		go func() {
 			start := time.Now().UnixMilli()
-			grad1, err1 = modules.FunctionPool.Random()(width,height)
+			grad1, err1 = modules.FunctionPool.Random()(width, height)
 			end := time.Now().UnixMilli()
-			fmt.Printf("%vms\n",end-start)
+			fmt.Printf("%vms\n", end-start)
 			wg.Done()
 		}()
 
 		go func() {
 			start := time.Now().UnixMilli()
-			grad2, err2 = modules.FunctionPool.Random()(width,height)
+			grad2, err2 = modules.FunctionPool.Random()(width, height)
 			end := time.Now().UnixMilli()
-			fmt.Printf("%vms\n",end-start)
+			fmt.Printf("%vms\n", end-start)
 			wg.Done()
 		}()
 
 		wg.Wait()
 
-		if(err1 != nil) {
+		if err1 != nil {
 			return nil, err1
 		}
-		if(err2 != nil) {
+		if err2 != nil {
 			return nil, err2
 		}
 
 		finalgrad = xor(grad1, grad2)
-		if(forceLowContrast) {
+		if forceLowContrast {
 			contrast := ContrastOf(finalgrad)
-			if(contrast < 700) {
+			if contrast < 700 {
 				approved = true
 			} else {
 				fmt.Println("Skipping, average contrast is too high.")
@@ -235,40 +251,40 @@ var lastTypeGiven int
 
 func NewImage(imageType string, width, height float64) (image.Image, error) {
 	imageFunc := modules.FunctionPool.Get(imageType)
-	if(imageFunc == nil) {
+	if imageFunc == nil {
 		// it might just be that the module isn't loaded yet. wait 150ms
 		time.Sleep(time.Millisecond * 150)
 		imageFunc = modules.FunctionPool.Get(imageType)
-		if(imageFunc == nil) {
-			return nil, fmt.Errorf("Invalid type %v.\n",imageType)
+		if imageFunc == nil {
+			return nil, fmt.Errorf("Invalid type %v.\n", imageType)
 		}
 	}
 	start := time.Now().UnixMilli()
-	image, err := imageFunc(width,height)
+	image, err := imageFunc(width, height)
 	end := time.Now().UnixMilli()
-	fmt.Printf("%vms for %v\n",end-start,imageType)
+	fmt.Printf("%vms for %v\n", end-start, imageType)
 	return image, err
 }
 
-func ContrastOf(img image.Image) (float64) {
+func ContrastOf(img image.Image) float64 {
 	var contrastValues float64
 	var contrastNum float64
 	var lastPixel float64
 	for y := float64(0); y < float64(img.Bounds().Max.Y); y++ {
-		var contrastValues_ []float64 
+		var contrastValues_ []float64
 		// and each row
 		for x := float64(0); x < float64(img.Bounds().Max.X); x++ {
-			r, g, b, _ := img.At(int(x),int(y)).RGBA()
+			r, g, b, _ := img.At(int(x), int(y)).RGBA()
 			contrastValues_ = append(contrastValues_, math.Abs(lastPixel-float64(r+g+b)))
-			lastPixel = float64(r+g+b)
+			lastPixel = float64(r + g + b)
 		}
 		var sum float64
-		for _, v := range contrastValues_{
+		for _, v := range contrastValues_ {
 			sum += v
 		}
-		sum = sum/float64(len(contrastValues_))
+		sum = sum / float64(len(contrastValues_))
 		contrastValues += sum
 		contrastNum++
-	} 
-	return contrastValues/contrastNum
+	}
+	return contrastValues / contrastNum
 }
