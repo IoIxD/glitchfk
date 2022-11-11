@@ -66,8 +66,6 @@ func MastodonThread() {
 				Sensitive:  false,
 				Visibility: mastodon.VisibilityUnlisted,
 			})
-
-			select {}
 		}
 	}
 }
