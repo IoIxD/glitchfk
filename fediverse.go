@@ -61,10 +61,11 @@ func MastodonThread() {
 			}
 
 			app.PostStatus(context.Background(), &mastodon.Toot{
-				Status:     "",
-				MediaIDs:   []mastodon.ID{attachment.ID},
-				Sensitive:  false,
-				Visibility: mastodon.VisibilityUnlisted,
+				Status:      "",
+				MediaIDs:    []mastodon.ID{attachment.ID},
+				Sensitive:   false,
+				SpoilerText: "eyestrain",
+				Visibility:  mastodon.VisibilityUnlisted,
 			})
 		}
 	}
