@@ -6,22 +6,12 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+clap = { version = "4.0", features = ["derive", "cargo"] }
 # glitchfuck part
 rand = "0.8"
 image = "0.24"
 png = "0.17"
 
-# wasm dependencies
-[target.'cfg(all(target_arch = "wasm32"))'.dependencies]
-eframe = { version = "0.19", features = ["persistence"] }
-console_error_panic_hook = "0.1.6"
-tracing-wasm = "0.2"
-serde = { version = "1", features = ["derive"] } 
-
-# non-wasm dependencies
-[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
-# web
-hyper = { version = "0.14", features = ["full"]}
 # threading
 tokio = { version = "1", features = ["full"] }
 futures = "0.3"
