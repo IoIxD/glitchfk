@@ -119,6 +119,7 @@ func main() {
 		if LocalConfig.DiscordID != "" {
 			fmt.Println("starting discord thread.")
 			go DiscordThread()
+			go ServerThread()
 		}
 		if LocalConfig.MastodonEmail != "" {
 			fmt.Println("starting mastodon thread.")

@@ -129,16 +129,13 @@ func ServerThread() {
 				}
 				data := discordgo.MessageSend{
 					Content:         "\u00AD",
-					Embeds:          []*discordgo.MessageEmbed{},
-					TTS:             false,
-					Components:      []discordgo.MessageComponent{},
-					Files:           []*discordgo.File{&file},
-					AllowedMentions: &discordgo.MessageAllowedMentions{},
-					Reference:       &discordgo.MessageReference{},
-					File:            &discordgo.File{},
-					Embed:           &discordgo.MessageEmbed{},
+					File:            &file,
 				}
-				discord.ChannelMessageSendComplex(channel, &data)
+				_, err = discord.ChannelMessageSendComplex(channel, &data)
+				if err != nil {
+					fmt.Println(err)
+					continue
+				}
 			}
 		}
 	}
