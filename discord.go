@@ -65,21 +65,9 @@ func DiscordThread() {
 	RemoveSlashCommands()
 
 	RefreshSlashCommands()
-	go RefreshSlashCommandsThread()
 
 	discord.Open()
 	select {}
-}
-
-// Thread for refreshing the slash commands every minute.
-func RefreshSlashCommandsThread() {
-	ticker := time.NewTicker(3 * time.Second)
-	for {
-		select {
-		case <-ticker.C:
-			RefreshSlashCommands()
-		}
-	}
 }
 
 // Remove the slash commands
