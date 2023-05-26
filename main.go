@@ -20,26 +20,29 @@ import (
 )
 
 var LocalConfig struct {
-	TwitterConsumerKey    string
-	TwitterConsumerSecret string
-	TwitterAccessToken    string
-	TwitterAccessSecret   string
-	TwitterOAuthToken     string
-	TwitterOAuthSecret    string
-	TwitterInterval       string
+	TwitterConsumerKey    	string
+	TwitterConsumerSecret 	string
+	TwitterAccessToken    	string
+	TwitterAccessSecret   	string
+	TwitterOAuthToken     	string
+	TwitterOAuthSecret    	string
+	TwitterInterval       	string
 
-	MastodonInstanceURL string
-	MastodonInterval    string
-	MastodonEmail       string
-	MastodonPassword    string
+	MastodonInstanceURL 	string
+	MastodonInterval    	string
+	MastodonEmail       	string
+	MastodonPassword    	string
 
-	DiscordAuthToken string
-	DiscordID        string
+	MastodonClientID 		string
+	MastodonClientSecret 	string
 
-	DiscordChannels []string
-	DiscordInterval string
+	DiscordAuthToken 		string
+	DiscordID        		string
 
-	InProduction bool
+	DiscordChannels 		[]string
+	DiscordInterval 		string
+
+	InProduction 			bool
 }
 
 var imageTypes = flag.String("types", "", "The types of images you want to generate and xor, seperated by commas.")

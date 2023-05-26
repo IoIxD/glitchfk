@@ -13,18 +13,11 @@ import (
 )
 
 func MastodonThread() {
-	appParent, err := mastodon.RegisterApp(context.Background(), &mastodon.AppConfig{
-		Server:     LocalConfig.MastodonInstanceURL,
-		ClientName: "glitchfuck",
-		Scopes:     "read write follow",
-		Website:    "https://github.com/IoIxD/glitchfuck",
-	})
-
 	app := mastodon.NewClient(&mastodon.Config{
-		Server:       "https://wetdry.world",
-		ClientID:     appParent.ClientID,
-		ClientSecret: appParent.ClientSecret,
-	})
+		Server:     LocalConfig.MastodonInstanceURL,
+		ClientID: LocalConfig.MastodonClientID,
+		ClientSecret: LocalConfig.MastodonClientSecret,
+	});
 
 	err = app.Authenticate(context.Background(), LocalConfig.MastodonEmail, LocalConfig.MastodonPassword)
 	if err != nil {
