@@ -33,7 +33,7 @@ var LocalConfig struct {
 	MastodonEmail       	string
 	MastodonPassword    	string
 
-	MastodonClientID 		string
+	MastodonClientKey 		string
 	MastodonClientSecret 	string
 
 	DiscordAuthToken 		string
@@ -124,7 +124,7 @@ func main() {
 			go DiscordThread()
 			go ServerThread()
 		}
-		if LocalConfig.MastodonEmail != "" {
+		if LocalConfig.MastodonClientKey != "" {
 			fmt.Println("starting mastodon thread.")
 			go MastodonThread()
 		}

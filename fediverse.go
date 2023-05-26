@@ -15,16 +15,11 @@ import (
 func MastodonThread() {
 	app := mastodon.NewClient(&mastodon.Config{
 		Server:     LocalConfig.MastodonInstanceURL,
-		ClientID: LocalConfig.MastodonClientID,
+		ClientID: LocalConfig.MastodonClientKey,
 		ClientSecret: LocalConfig.MastodonClientSecret,
 	});
 
-	err = app.Authenticate(context.Background(), LocalConfig.MastodonEmail, LocalConfig.MastodonPassword)
-	if err != nil {
-		fmt.Println("Authentication error, ", err)
-		os.Exit(1)
-		return
-	}
+	fmt.Println("Posting every",LocalConfig.MastodonInterval,"seconds");
 
 	duration, err := time.ParseDuration(LocalConfig.MastodonInterval)
 	if err != nil {
