@@ -1,7 +1,6 @@
 package modules
 
 import (
-	"fmt"
 	"image"
 	"image/color"
 	"math"
@@ -22,12 +21,6 @@ func init() {
 	for _, v := range types {
 		FunctionPool.Add(v, NewGradientFunction(v, false))
 		FunctionPool.Add("segmented-"+v, NewGradientFunction(v, true))
-
-		// add them three more times to artifically increase their chances over the hoard of noise functions
-		for i := 0; i < 3; i++ {
-			FunctionPool.Add(v+"_"+fmt.Sprintf("%v",i), NewGradientFunction(v, false))
-			FunctionPool.Add("segmented-"+v+"_"+fmt.Sprintf("%v",i), NewGradientFunction(v, true))
-		}
 	}
 }
 
