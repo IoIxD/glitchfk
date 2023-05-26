@@ -25,6 +25,6 @@ require (
 	github.com/dghubble/oauth1 v0.7.1
 	github.com/dghubble/sling v1.4.0 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
-	github.com/mattn/go-mastodon v0.0.5
+	github.com/mattn/go-mastodon v0.0.6
 	github.com/mazznoer/csscolorparser v0.1.2 // indirect
 )

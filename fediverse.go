@@ -19,11 +19,18 @@ func MastodonThread() {
 		ClientSecret: LocalConfig.MastodonClientSecret,
 	});
 
-	fmt.Println("Posting every",LocalConfig.MastodonInterval,"seconds");
+	err := app.Authenticate(context.Background(), LocalConfig.MastodonEmail, LocalConfig.MastodonPassword);
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+		return
+	}
+
+	fmt.Println("Posting every",LocalConfig.MastodonInterval);
 
 	duration, err := time.ParseDuration(LocalConfig.MastodonInterval)
 	if err != nil {
-		fmt.Println("Time parsing erro,r", err)
+		fmt.Println(err)
 		os.Exit(1)
 		return
 	}

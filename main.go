@@ -35,7 +35,8 @@ var LocalConfig struct {
 
 	MastodonClientKey 		string
 	MastodonClientSecret 	string
-
+	MastodonAccessSecret 	string
+	
 	DiscordAuthToken 		string
 	DiscordID        		string
 
