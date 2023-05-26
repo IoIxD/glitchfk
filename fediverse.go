@@ -51,13 +51,13 @@ func MastodonThread() {
 			image, err := DefaultImage(true, 800.0, 600.0) // ignore errors since this is something that posts daily without user interaction.
 			if err != nil {
 				fmt.Println(err)
-				return
+				continue
 			}
 
 			attachment, err := app.UploadMediaFromReader(context.Background(), bytes.NewReader(image))
 			if err != nil {
 				fmt.Println(err)
-				return
+				continue
 			}
 
 			app.PostStatus(context.Background(), &mastodon.Toot{

@@ -36,6 +36,9 @@ var LocalConfig struct {
 	DiscordAuthToken string
 	DiscordID        string
 
+	DiscordChannels []string
+	DiscordInterval string
+
 	InProduction bool
 }
 

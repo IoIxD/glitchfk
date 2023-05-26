@@ -4,7 +4,9 @@ import (
 	"bytes"
 	"fmt"
 	"os"
+	"os/signal"
 	"strconv"
+	"syscall"
 	"time"
 
 	"github.com/bwmarrin/discordgo"
@@ -97,9 +99,55 @@ func RefreshSlashCommands() {
 	}
 }
 
+func ServerThread() {
+	channels := LocalConfig.DiscordChannels
+	duration, err := time.ParseDuration(LocalConfig.DiscordInterval)
+	if err != nil {
+		fmt.Println("Time parsing error", err)
+		os.Exit(1)
+		return
+	}
+
+	sigs := make(chan os.Signal, 1)
+	signal.Notify(sigs, os.Interrupt, syscall.SIGTERM)
+	for {
+		select {
+		case <-sigs:
+			os.Exit(0)
+
+		case <-WaitFor(duration):
+			for _, channel := range channels {
+				image, err := DefaultImage(true, 800.0, 600.0) // ignore errors since this is something that posts daily without user interaction.
+				if err != nil {
+					fmt.Println(err)
+					continue
+				}
+				file := discordgo.File{
+					Name:        "glitchfuck.png",
+					ContentType: "type/png",
+					Reader:      bytes.NewReader(image),
+				}
+				data := discordgo.MessageSend{
+					Content:         "\u00AD",
+					Embeds:          []*discordgo.MessageEmbed{},
+					TTS:             false,
+					Components:      []discordgo.MessageComponent{},
+					Files:           []*discordgo.File{&file},
+					AllowedMentions: &discordgo.MessageAllowedMentions{},
+					Reference:       &discordgo.MessageReference{},
+					File:            &discordgo.File{},
+					Embed:           &discordgo.MessageEmbed{},
+				}
+				discord.ChannelMessageSendComplex(channel, &data)
+			}
+		}
+	}
+}
+
+
 // The main command
 func mainCommand(s *discordgo.Session, i *discordgo.InteractionCreate) {
-	var sent bool
+	var sent bool = false
 	// Thread to check if the command has finished within the time discord allows.
 	go func() {
 		time.Sleep(time.Millisecond * 2800)
