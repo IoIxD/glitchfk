@@ -1,4 +1,4 @@
-# Glitchfuck
+# Glitchfk
 
 Bot that lets you create random or determined glitch imagery by xor'ing images together. [A cli program can be found here](https://github.com/IoIxD/glitchfuck/tree/rust)
 
