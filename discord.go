@@ -209,10 +209,10 @@ func mainCommand(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		var tys []string
 		if types, ok := optionMap["types"]; ok {
 			image, err = ImageViaTypes(types.Value.(string), time.Now().UnixNano(), width, height)
-			content = "`" + types.Value.(string) + "`"
+			content = "`types: " + types.Value.(string) + "`"
 		} else {
 			image, tys, _, err = DefaultImage(forceLowContrast, width, height)
-			content = strings.Join(tys, ",")
+			content = "`types: " + strings.Join(tys, ",") + "`"
 		}
 
 		if err != nil {
