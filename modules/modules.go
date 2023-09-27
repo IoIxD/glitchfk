@@ -7,7 +7,7 @@ import (
 	"sync"
 )
 
-type ImageFunction func(width, height float64) (image.Image, error)
+type ImageFunction func(seed int64, width, height float64) (image.Image, error)
 
 type FunctionPoolStruct struct {
 	sync.RWMutex
@@ -46,18 +46,18 @@ func (f *FunctionPoolStruct) add(key string, value ImageFunction) {
 
 func (f *FunctionPoolStruct) Get(key string) ImageFunction {
 	function, ok := f.functions[key]
-	if(ok) {
+	if ok {
 		return function
 	} else {
 		return nil
 	}
 }
 
-func (f *FunctionPoolStruct) Random() ImageFunction {
+func (f *FunctionPoolStruct) Random() (ImageFunction, string) {
 	f.Lock()
 	randomIndex := rand.Intn(len(f.keys))
 	key := f.keys[randomIndex]
 	fmt.Printf("generating %v image...\n", key)
 	f.Unlock()
-	return f.functions[key]
+	return f.functions[key], key
 }

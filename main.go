@@ -20,38 +20,39 @@ import (
 )
 
 var LocalConfig struct {
-	TwitterConsumerKey    	string
-	TwitterConsumerSecret 	string
-	TwitterAccessToken    	string
-	TwitterAccessSecret   	string
-	TwitterOAuthToken     	string
-	TwitterOAuthSecret    	string
-	TwitterInterval       	string
+	TwitterConsumerKey    string
+	TwitterConsumerSecret string
+	TwitterAccessToken    string
+	TwitterAccessSecret   string
+	TwitterOAuthToken     string
+	TwitterOAuthSecret    string
+	TwitterInterval       string
 
-	MastodonInstanceURL 	string
-	MastodonInterval    	string
-	MastodonEmail       	string
-	MastodonPassword    	string
+	MastodonInstanceURL string
+	MastodonInterval    string
+	MastodonEmail       string
+	MastodonPassword    string
 
-	MastodonClientKey 		string
-	MastodonClientSecret 	string
-	MastodonAccessSecret 	string
-	
-	DiscordAuthToken 		string
-	DiscordID        		string
+	MastodonClientKey    string
+	MastodonClientSecret string
+	MastodonAccessSecret string
 
-	DiscordChannels 		[]string
-	DiscordInterval 		string
+	DiscordAuthToken string
+	DiscordID        string
 
-	InProduction 			bool
+	DiscordChannels []string
+	DiscordInterval string
+
+	InProduction bool
 }
 
 var imageTypes = flag.String("types", "", "The types of images you want to generate and xor, seperated by commas.")
 var cpuProfile = flag.String("cpuprofile", "", "Debug flag for what file to write the cpu profile to. CPU Profiling is disabled if this is blank.")
 var memProfile = flag.String("memprofile", "", "Debug flag for what file to write the memory profile to. CPU Profiling is disabled if this is blank.")
 var outputFile = flag.String("output", "test.png", "File to save output to.")
-var widthOpt = flag.Float64("width", 1024, "Debug flag for what file to write the memory profile to. CPU Profiling is disabled if this is blank.")
-var heightOpt = flag.Float64("height", 768, "File to save output to.")
+var widthOpt = flag.Float64("width", 1024, "Width")
+var heightOpt = flag.Float64("height", 768, "Height")
+var seedOpt = flag.Int64("seed", time.Now().UnixMilli(), "Seed")
 
 func main() {
 	flag.Parse()
@@ -84,7 +85,7 @@ func main() {
 
 	// if image types were given, run the command through them.
 	if *imageTypes != "" {
-		image, err := ImageViaTypes(*imageTypes, *widthOpt, *heightOpt)
+		image, err := ImageViaTypes(*imageTypes, *seedOpt, *widthOpt, *heightOpt)
 		if err != nil {
 			fmt.Println(err)
 			return
@@ -131,11 +132,12 @@ func main() {
 		}
 		select {}
 	} else {
-		image, err := DefaultImage(true, *widthOpt, *heightOpt)
+		image, types, seed, err := DefaultImage(true, *widthOpt, *heightOpt)
 		if err != nil {
 			fmt.Println(err)
 			return
 		}
+		fmt.Printf("types = %s\nseed=%d", strings.Join(types, ","), seed)
 		f, _ := os.Create(*outputFile)
 		f.Write(image)
 		f.Close()
@@ -149,12 +151,12 @@ func WaitFor(int time.Duration) <-chan time.Time {
 	return time.After(dur)
 }
 
-func ImageViaTypes(types_ string, width, height float64) ([]byte, error) {
+func ImageViaTypes(types_ string, seed int64, width, height float64) ([]byte, error) {
 	types := strings.Split(types_, ",")
 	var lastImage image.Image
 	var finalImage image.Image
 	for _, v := range types {
-		image, err := NewImage(v, width, height)
+		image, err := NewImage(v, seed, width, height)
 		if err != nil {
 			return nil, err
 		}
@@ -177,17 +179,23 @@ func ImageViaTypes(types_ string, width, height float64) ([]byte, error) {
 	}
 }
 
-func DefaultImage(forceLowContrast bool, width, height float64) ([]byte, error) {
+func DefaultImage(forceLowContrast bool, width, height float64) ([]byte, []string, int64, error) {
 	var approved bool
+	types := make([]string, 0)
+	var seed int64
 	var finalgrad image.Image
 	for !approved {
+		var fun1, fun2 modules.ImageFunction
+		var type1, type2 string
 		var grad1, grad2 image.Image
 		var wg sync.WaitGroup
 		var err1, err2 error
+		seed = time.Now().UnixNano()
 		wg.Add(2)
 		go func() {
 			start := time.Now().UnixMilli()
-			grad1, err1 = modules.FunctionPool.Random()(width, height)
+			fun1, type1 = modules.FunctionPool.Random()
+			grad1, err1 = fun1(seed, width, height)
 			end := time.Now().UnixMilli()
 			fmt.Printf("%vms\n", end-start)
 			wg.Done()
@@ -195,7 +203,8 @@ func DefaultImage(forceLowContrast bool, width, height float64) ([]byte, error) 
 
 		go func() {
 			start := time.Now().UnixMilli()
-			grad2, err2 = modules.FunctionPool.Random()(width, height)
+			fun2, type2 = modules.FunctionPool.Random()
+			grad2, err2 = fun2(seed, width, height)
 			end := time.Now().UnixMilli()
 			fmt.Printf("%vms\n", end-start)
 			wg.Done()
@@ -204,10 +213,10 @@ func DefaultImage(forceLowContrast bool, width, height float64) ([]byte, error) 
 		wg.Wait()
 
 		if err1 != nil {
-			return nil, err1
+			return nil, nil, 0, err1
 		}
 		if err2 != nil {
-			return nil, err2
+			return nil, nil, 0, err2
 		}
 
 		finalgrad = xor(grad1, grad2)
@@ -221,16 +230,18 @@ func DefaultImage(forceLowContrast bool, width, height float64) ([]byte, error) 
 		} else {
 			approved = true
 		}
+
+		types = []string{type1, type2}
 	}
 
 	buf := new(bytes.Buffer)
 	if err := png.Encode(buf, finalgrad); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
-		return nil, nil // shut up compiler
+		return nil, types, seed, nil // shut up compiler
 	} else {
 		bytes := buf.Bytes()
-		return bytes, nil
+		return bytes, types, seed, nil
 	}
 }
 
@@ -257,7 +268,7 @@ func xor(img1, img2 image.Image) image.Image {
 
 var lastTypeGiven int
 
-func NewImage(imageType string, width, height float64) (image.Image, error) {
+func NewImage(imageType string, seed int64, width, height float64) (image.Image, error) {
 	imageFunc := modules.FunctionPool.Get(imageType)
 	if imageFunc == nil {
 		// it might just be that the module isn't loaded yet. wait 150ms
@@ -267,8 +278,9 @@ func NewImage(imageType string, width, height float64) (image.Image, error) {
 			return nil, fmt.Errorf("Invalid type %v.\n", imageType)
 		}
 	}
+
 	start := time.Now().UnixMilli()
-	image, err := imageFunc(width, height)
+	image, err := imageFunc(seed, width, height)
 	end := time.Now().UnixMilli()
 	fmt.Printf("%vms for %v\n", end-start, imageType)
 	return image, err

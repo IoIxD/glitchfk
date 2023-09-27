@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/signal"
 	"strconv"
+	"strings"
 	"syscall"
 	"time"
 
@@ -117,7 +118,7 @@ func ServerThread() {
 
 		case <-WaitFor(duration):
 			for _, channel := range channels {
-				image, err := DefaultImage(true, 800.0, 600.0) // ignore errors since this is something that posts daily without user interaction.
+				image, types, _, err := DefaultImage(true, 800.0, 600.0) // ignore errors since this is something that posts daily without user interaction.
 				if err != nil {
 					fmt.Println(err)
 					continue
@@ -128,8 +129,8 @@ func ServerThread() {
 					Reader:      bytes.NewReader(image),
 				}
 				data := discordgo.MessageSend{
-					Content:         "\u00AD",
-					File:            &file,
+					Content: "`types: " + strings.Join(types, ","),
+					File:    &file,
 				}
 				_, err = discord.ChannelMessageSendComplex(channel, &data)
 				if err != nil {
@@ -140,7 +141,6 @@ func ServerThread() {
 		}
 	}
 }
-
 
 // The main command
 func mainCommand(s *discordgo.Session, i *discordgo.InteractionCreate) {
@@ -207,10 +207,10 @@ func mainCommand(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		var image []byte
 		var content string
 		if types, ok := optionMap["types"]; ok {
-			image, err = ImageViaTypes(types.Value.(string), width, height)
+			image, err = ImageViaTypes(types.Value.(string), time.Now().UnixNano(), width, height)
 			content = "`" + types.Value.(string) + "`"
 		} else {
-			image, err = DefaultImage(forceLowContrast, width, height)
+			image, _, _, err = DefaultImage(forceLowContrast, width, height)
 			content = "­"
 		}
 

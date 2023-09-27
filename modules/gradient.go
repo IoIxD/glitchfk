@@ -5,7 +5,6 @@ import (
 	"image/color"
 	"math"
 	"math/rand"
-	"time"
 
 	"github.com/mazznoer/colorgrad"
 )
@@ -25,19 +24,19 @@ func init() {
 }
 
 func NewGradientFunction(mode string, fract bool) ImageFunction {
-	return func(width, height float64) (image.Image, error) {
-		return NewGradientImage(mode, fract, width, height)
+	return func(seed int64, width, height float64) (image.Image, error) {
+		return NewGradientImage(seed, mode, fract, width, height)
 	}
 }
 
-func NewGradient() (colorgrad.Gradient, error) {
-	rand.Seed(time.Now().UnixNano())
+func NewGradient(seed int64) (colorgrad.Gradient, error) {
+	rand.Seed(seed)
 	// Create a bunch of random colors
 	colorNum := rand.Intn(DETAIL)
 	colors := make([]color.Color, colorNum)
 
 	for i := range colors {
-		rand.Seed(time.Now().UnixNano())
+
 		colors[i] = color.RGBA{uint8(rand.Intn(255)), uint8(rand.Intn(255)), uint8(rand.Intn(255)), 255}
 	}
 
@@ -47,8 +46,10 @@ func NewGradient() (colorgrad.Gradient, error) {
 	}
 	return grad, err
 }
-func NewGradientImage(mode string, useFract bool, width, height float64) (image.Image, error) {
-	grad, err := NewGradient()
+func NewGradientImage(seed int64, mode string, useFract bool, width, height float64) (image.Image, error) {
+	rand.Seed(seed)
+
+	grad, err := NewGradient(seed)
 	if err != nil {
 		return nil, err
 	}
@@ -57,7 +58,7 @@ func NewGradientImage(mode string, useFract bool, width, height float64) (image.
 
 	offsetX := float64(rand.Intn(int(width)))
 	offsetY := float64(rand.Intn(int(height)))
-	
+
 	mul := float64(rand.Intn(5))
 
 	// For each column in the image
@@ -70,17 +71,17 @@ func NewGradientImage(mode string, useFract bool, width, height float64) (image.
 			var position float64
 
 			switch mode {
-			case "horizontal":												// 27ms 	-> 15ms
+			case "horizontal": // 27ms 	-> 15ms
 				position = x / width
-			case "vertical":												// 27ms	 	-> 21ms
+			case "vertical": // 27ms	 	-> 21ms
 				position = y / height
-			case "diagonal": 												// 27ms 	-> 18ms
+			case "diagonal": // 27ms 	-> 18ms
 				position = (x / width) + (y / height)
-			case "radial": 													// 51ms 	-> 43.4ms
+			case "radial": // 51ms 	-> 43.4ms
 				position = cos(x/width)*mul + sin(y/height)*mul
-			case "inverse-radial": 											// 51ms 	-> 36ms
+			case "inverse-radial": // 51ms 	-> 36ms
 				position = cos(y/height)*mul + sin(x/width)*mul
-			case "mario64windowtexture": 									// 56ms 	-> 35ms
+			case "mario64windowtexture": // 56ms 	-> 35ms
 				adj := ((width / 2) - x)
 				opp := ((height / 2) - y)
 				ctan := opp / adj
@@ -121,8 +122,7 @@ func NewGradientImage(mode string, useFract bool, width, height float64) (image.
 	return img, nil
 }
 
-func fract(value float64) (float64) {
+func fract(value float64) float64 {
 	valueRounded := float64(int64(value))
 	return valueRounded - value
 }
-

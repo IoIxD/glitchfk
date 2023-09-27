@@ -14,19 +14,19 @@ import (
 
 func MastodonThread() {
 	app := mastodon.NewClient(&mastodon.Config{
-		Server:     LocalConfig.MastodonInstanceURL,
-		ClientID: LocalConfig.MastodonClientKey,
+		Server:       LocalConfig.MastodonInstanceURL,
+		ClientID:     LocalConfig.MastodonClientKey,
 		ClientSecret: LocalConfig.MastodonClientSecret,
-	});
+	})
 
-	err := app.Authenticate(context.Background(), LocalConfig.MastodonEmail, LocalConfig.MastodonPassword);
+	err := app.Authenticate(context.Background(), LocalConfig.MastodonEmail, LocalConfig.MastodonPassword)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 		return
 	}
 
-	fmt.Println("Posting every",LocalConfig.MastodonInterval);
+	fmt.Println("Posting every", LocalConfig.MastodonInterval)
 
 	duration, err := time.ParseDuration(LocalConfig.MastodonInterval)
 	if err != nil {
@@ -43,7 +43,7 @@ func MastodonThread() {
 			os.Exit(0)
 
 		case <-WaitFor(duration):
-			image, err := DefaultImage(true, 800.0, 600.0) // ignore errors since this is something that posts daily without user interaction.
+			image, _, _, err := DefaultImage(true, 800.0, 600.0) // ignore errors since this is something that posts daily without user interaction.
 			if err != nil {
 				fmt.Println(err)
 				continue
