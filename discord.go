@@ -206,12 +206,13 @@ func mainCommand(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		}
 		var image []byte
 		var content string
+		var tys []string
 		if types, ok := optionMap["types"]; ok {
 			image, err = ImageViaTypes(types.Value.(string), time.Now().UnixNano(), width, height)
 			content = "`" + types.Value.(string) + "`"
 		} else {
-			image, _, _, err = DefaultImage(forceLowContrast, width, height)
-			content = "­"
+			image, tys, _, err = DefaultImage(forceLowContrast, width, height)
+			content = strings.Join(tys, ",")
 		}
 
 		if err != nil {
