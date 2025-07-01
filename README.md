@@ -1,3 +1,5 @@
+[moved to https://codeberg.org/IoIxD/glitchfk](https://codeberg.org/IoIxD/glitchfk)
+
 # Glitchfk
 
 Program and bot that lets you create random or determined glitch imagery by xor'ing images together. 
